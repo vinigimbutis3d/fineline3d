@@ -431,33 +431,78 @@ body{background:var(--black);color:var(--white);font-family:'DM Sans',sans-serif
         <button class="sub-tab" id="stLog">Log de mensagens</button>
       </div>
 
+      <!-- MODAL LEAD -->
+      <div id="leadModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:200;align-items:center;justify-content:center">
+        <div style="background:#1a1a1a;border:1px solid var(--border);padding:2rem;width:100%;max-width:500px;border-radius:2px;max-height:90vh;overflow-y:auto">
+          <div style="font-size:0.7rem;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:1.25rem" id="leadModalTitulo">Adicionar lead</div>
+          <input type="hidden" id="leadEditId">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.75rem">
+            <div><div style="font-size:0.65rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.3rem">Nome</div>
+              <input type="text" id="lmNome" placeholder="Nome completo" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.85rem;padding:0.65rem 0.8rem;outline:none"></div>
+            <div><div style="font-size:0.65rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.3rem">WhatsApp</div>
+              <input type="tel" id="lmTel" placeholder="(11) 99999-9999" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.85rem;padding:0.65rem 0.8rem;outline:none"></div>
+          </div>
+          <div style="margin-bottom:0.75rem"><div style="font-size:0.65rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.3rem">E-mail</div>
+            <input type="email" id="lmEmail" placeholder="email@exemplo.com" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.85rem;padding:0.65rem 0.8rem;outline:none"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.75rem">
+            <div><div style="font-size:0.65rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.3rem">Produto de interesse</div>
+              <input type="text" id="lmProduto" placeholder="Ex: Case personalizado" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.85rem;padding:0.65rem 0.8rem;outline:none"></div>
+            <div><div style="font-size:0.65rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.3rem">Origem</div>
+              <select id="lmOrigem" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.85rem;padding:0.65rem 0.8rem;outline:none;cursor:pointer">
+                <option value="">Selecione...</option>
+                <option value="Shopee">Shopee</option>
+                <option value="Mercado Livre">Mercado Livre</option>
+                <option value="Amazon">Amazon</option>
+                <option value="Instagram">Instagram</option>
+                <option value="Google Ads">Google Ads</option>
+                <option value="WhatsApp">WhatsApp direto</option>
+                <option value="Indicação">Indicação</option>
+                <option value="Site">Site</option>
+              </select></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.75rem">
+            <div><div style="font-size:0.65rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.3rem">Responsável</div>
+              <input type="text" id="lmResp" placeholder="Quem está atendendo" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.85rem;padding:0.65rem 0.8rem;outline:none"></div>
+            <div><div style="font-size:0.65rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.3rem">Status</div>
+              <select id="lmStatus" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.85rem;padding:0.65rem 0.8rem;outline:none;cursor:pointer">
+                <option value="novo">Novo</option>
+                <option value="contato">Em contato</option>
+                <option value="fechado">Fechado</option>
+                <option value="perdido">Perdido</option>
+              </select></div>
+          </div>
+          <div style="margin-bottom:1.25rem"><div style="font-size:0.65rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.3rem">Observações</div>
+            <textarea id="lmObs" placeholder="Anotações sobre o lead..." rows="3" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.85rem;padding:0.65rem 0.8rem;outline:none;resize:vertical"></textarea></div>
+          <div style="display:flex;gap:8px">
+            <button id="btnSalvarLead" class="add-btn" style="flex:1;padding:0.75rem;text-align:center">Salvar lead</button>
+            <button id="btnCancelarLead" style="padding:0.75rem 1.25rem;background:none;border:1px solid var(--border);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer">Cancelar</button>
+          </div>
+        </div>
+      </div>
+
       <!-- SUB: LISTA -->
       <div class="sub-panel active" id="sub-lista">
         <div class="panel">
-          <div class="panel-title">Adicionar lead</div>
-          <div class="add-row">
-            <input type="text" placeholder="Nome completo" id="lNome" style="width:160px">
-            <input type="email" placeholder="E-mail" id="lEmail" style="width:190px">
-            <input type="tel" placeholder="WhatsApp com DDD" id="lTel" style="width:170px">
-            <input type="text" placeholder="Produto de interesse" id="lProduto" style="width:180px">
-            <button class="add-btn" id="btnAddLead">+ Adicionar</button>
-          </div>
-        </div>
-        <div class="panel">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
             <div class="panel-title" style="margin:0">Leads cadastrados</div>
-            <select id="filtroLead" style="background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.78rem;padding:0.4rem 0.65rem;outline:none;cursor:pointer">
-              <option value="todos">Todos</option>
-              <option value="novo">Novo</option>
-              <option value="contato">Em contato</option>
-              <option value="fechado">Fechado</option>
-              <option value="perdido">Perdido</option>
-            </select>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <input type="text" id="buscaLead" placeholder="Buscar..." style="background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.78rem;padding:0.4rem 0.65rem;outline:none;width:140px">
+              <select id="filtroLead" style="background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.78rem;padding:0.4rem 0.65rem;outline:none;cursor:pointer">
+                <option value="todos">Todos</option>
+                <option value="novo">Novo</option>
+                <option value="contato">Em contato</option>
+                <option value="fechado">Fechado</option>
+                <option value="perdido">Perdido</option>
+              </select>
+              <button class="add-btn" id="btnAddLead">+ Novo lead</button>
+            </div>
           </div>
-          <table class="table">
-            <thead><tr><th>Nome</th><th>E-mail</th><th>Telefone</th><th>Produto</th><th>Status</th><th>Ação</th></tr></thead>
-            <tbody id="leadsBody"><tr><td colspan="6" style="text-align:center;color:var(--muted);padding:2rem">Nenhum lead ainda.</td></tr></tbody>
+          <div style="overflow-x:auto">
+          <table class="table" style="min-width:700px">
+            <thead><tr><th>Nome</th><th>E-mail</th><th>Telefone</th><th>Produto</th><th>Responsável</th><th>Status</th><th>Ações</th></tr></thead>
+            <tbody id="leadsBody"><tr><td colspan="7" style="text-align:center;color:var(--muted);padding:2rem">Nenhum lead ainda.</td></tr></tbody>
           </table>
+          </div>
         </div>
       </div>
 
@@ -502,7 +547,12 @@ body{background:var(--black);color:var(--white);font-family:'DM Sans',sans-serif
           </div>
         </div>
         <div class="panel">
-          <div class="panel-title">Histórico de mensagens</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
+            <div class="panel-title" style="margin:0">Histórico de mensagens</div>
+            <select id="filtroLogLead" style="background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.78rem;padding:0.4rem 0.65rem;outline:none;cursor:pointer">
+              <option value="">Todos os leads</option>
+            </select>
+          </div>
           <table class="table">
             <thead><tr><th>Data/Hora</th><th>Lead</th><th>Canal</th><th>Mensagem</th><th>Enviado por</th></tr></thead>
             <tbody id="logBody"><tr><td colspan="5" style="text-align:center;color:var(--muted);padding:2rem">Nenhuma mensagem registrada ainda.</td></tr></tbody>
@@ -549,6 +599,7 @@ function entrar(){
     setTimeout(initCharts, 150);
     carregarFila(); renderFila();
     carregarProdutos(); renderProdutos();
+    carregarLeads(); renderLeads(); updateLeadSelects();
   } else {
     document.getElementById("loginErr").style.display = "block";
     document.getElementById("senhaInput").value = "";
@@ -823,7 +874,27 @@ document.querySelectorAll(".ck").forEach(function(cb){
   });
 });
 
-// LEADS
+// ── LEADS ──
+var LEADS_KEY   = "fl3d_leads_v1";
+var LOGMSG_KEY  = "fl3d_logmsg_v1";
+var leads    = [];
+var logMsgs  = [];
+var cadencias = {};
+
+function salvarLeads(){
+  try{ localStorage.setItem(LEADS_KEY,  JSON.stringify(leads));   } catch(e){}
+  try{ localStorage.setItem(LOGMSG_KEY, JSON.stringify(logMsgs.slice(0,200))); } catch(e){}
+}
+
+function carregarLeads(){
+  try{
+    var d = localStorage.getItem(LEADS_KEY);
+    if(d) leads = JSON.parse(d);
+    var dl = localStorage.getItem(LOGMSG_KEY);
+    if(dl) logMsgs = JSON.parse(dl);
+  } catch(e){ leads = []; logMsgs = []; }
+}
+
 function updateLeadMetrics(){
   var hoje = new Date().toLocaleDateString("pt-BR");
   document.getElementById("totalLeads").textContent    = leads.length;
@@ -833,67 +904,130 @@ function updateLeadMetrics(){
 }
 
 function updateLeadSelects(){
-  var opts = "<option value=\"\">Selecione um lead...</option>" +
+  var base = "<option value=\"\">Selecione um lead...</option>" +
     leads.map(function(l){ return "<option value=\""+l.id+"\">"+l.nome+"</option>"; }).join("");
-  document.getElementById("cadLead").innerHTML = opts;
-  document.getElementById("logLead").innerHTML = "<option value=\"\">Lead...</option>" +
-    leads.map(function(l){ return "<option value=\""+l.id+"\">"+l.nome+"</option>"; }).join("");
+  document.getElementById("cadLead").innerHTML  = base;
+  document.getElementById("logLead").innerHTML  = base.replace("Selecione um lead...","Lead...");
 }
+
+var STATUS_LABELS = {novo:"Novo", contato:"Em contato", fechado:"Fechado", perdido:"Perdido"};
+var STATUS_BADGE  = {novo:"badge-info", contato:"badge-warn", fechado:"badge-ok", perdido:"badge-danger"};
 
 function renderLeads(){
   var filtro = document.getElementById("filtroLead").value;
-  var lista = filtro==="todos" ? leads : leads.filter(function(l){ return l.status===filtro; });
+  var busca  = document.getElementById("buscaLead") ? document.getElementById("buscaLead").value.toLowerCase() : "";
+  var lista  = leads.filter(function(l){
+    var matchFiltro = filtro==="todos" || l.status===filtro;
+    var matchBusca  = !busca || l.nome.toLowerCase().includes(busca) || (l.email||"").toLowerCase().includes(busca) || (l.tel||"").includes(busca);
+    return matchFiltro && matchBusca;
+  });
+
   var tbody = document.getElementById("leadsBody");
   if(!lista.length){
-    tbody.innerHTML = "<tr><td colspan=\"6\" style=\"text-align:center;color:var(--muted);padding:2rem\">Nenhum lead encontrado.</td></tr>";
-  } else {
-    var statusLabels = {novo:"Novo",contato:"Em contato",fechado:"Fechado",perdido:"Perdido"};
-    tbody.innerHTML = lista.map(function(l){
-      var opts = ["novo","contato","fechado","perdido"].map(function(s){
-        return "<option value=\""+s+"\""+(l.status===s?" selected":"")+">"+statusLabels[s]+"</option>";
-      }).join("");
-      var num = l.tel ? l.tel.replace(/[^0-9]/g,"") : "";
-      var wlink = l.tel ? "<a href=\"https://wa.me/55"+num+"\" target=\"_blank\" style=\"color:var(--accent)\">"+l.tel+"</a>" : "-";
-      var elink = l.email ? "<a href=\"mailto:"+l.email+"\" style=\"color:var(--accent)\">"+l.email+"</a>" : "-";
-      return "<tr>"+
-        "<td style=\"font-weight:500\">"+l.nome+"</td>"+
-        "<td>"+elink+"</td>"+
-        "<td>"+wlink+"</td>"+
-        "<td>"+(l.produto||"-")+"</td>"+
-        "<td><select data-id=\""+l.id+"\" class=\"stsel\" style=\"background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:var(--white);font-size:0.75rem;padding:0.25rem 0.5rem;outline:none;cursor:pointer\">"+opts+"</select></td>"+
-        "<td><button data-id=\""+l.id+"\" class=\"delbtn\" style=\"background:none;border:none;color:var(--muted);cursor:pointer;font-size:0.8rem\">remover</button></td>"+
-      "</tr>";
-    }).join("");
-    tbody.querySelectorAll(".stsel").forEach(function(sel){
-      sel.addEventListener("change", function(){
-        var lead = leads.find(function(l){ return l.id==sel.dataset.id; });
-        if(lead){ lead.status = sel.value; updateLeadMetrics(); }
-      });
-    });
-    tbody.querySelectorAll(".delbtn").forEach(function(btn){
-      btn.addEventListener("click", function(){
-        leads = leads.filter(function(l){ return l.id!=btn.dataset.id; });
-        renderLeads(); updateLeadMetrics(); updateLeadSelects();
-      });
-    });
+    tbody.innerHTML = "<tr><td colspan='7' style='text-align:center;color:var(--muted);padding:2rem'>Nenhum lead encontrado.</td></tr>";
+    updateLeadMetrics(); return;
   }
+
+  tbody.innerHTML = lista.map(function(l){
+    var num = l.tel ? l.tel.replace(/[^0-9]/g,"") : "";
+    var wlink = l.tel   ? "<a href=\"https://wa.me/55"+num+"\" target=\"_blank\" style=\"color:var(--accent)\">"+l.tel+"</a>" : "-";
+    var elink = l.email ? "<a href=\"mailto:"+l.email+"\" style=\"color:var(--accent)\">"+l.email+"</a>" : "-";
+    var opts  = Object.keys(STATUS_LABELS).map(function(s){
+      return "<option value=\""+s+"\""+( l.status===s?" selected":"")+">"+STATUS_LABELS[s]+"</option>";
+    }).join("");
+    var origem = l.origem ? "<span style='font-size:0.7rem;color:var(--muted)'> · "+l.origem+"</span>" : "";
+    var resp   = l.responsavel ? "<span class='badge badge-info' style='font-size:0.62rem'>"+l.responsavel+"</span>" : "-";
+    return "<tr>"+
+      "<td style='font-weight:500'>"+l.nome+origem+"</td>"+
+      "<td>"+elink+"</td>"+
+      "<td>"+wlink+"</td>"+
+      "<td>"+(l.produto||"-")+"</td>"+
+      "<td>"+resp+"</td>"+
+      "<td><select class='stsel-lead' data-id='"+l.id+"' style='background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:var(--white);font-size:0.75rem;padding:0.25rem 0.5rem;outline:none;cursor:pointer'>"+opts+"</select></td>"+
+      "<td style='white-space:nowrap'>"+
+        "<button class='editbtn-lead' data-id='"+l.id+"' style='background:none;border:1px solid var(--border);color:var(--muted);cursor:pointer;font-size:0.75rem;padding:0.2rem 0.55rem;margin-right:4px'>editar</button>"+
+        "<button class='delbtn-lead'  data-id='"+l.id+"' style='background:none;border:1px solid rgba(220,50,50,0.3);color:#ff6b6b;cursor:pointer;font-size:0.75rem;padding:0.2rem 0.55rem'>excluir</button>"+
+      "</td>"+
+    "</tr>";
+  }).join("");
+
+  tbody.querySelectorAll(".stsel-lead").forEach(function(sel){
+    sel.addEventListener("change", function(){
+      var lead = leads.find(function(l){ return l.id==sel.dataset.id; });
+      if(lead){
+        lead.status = sel.value;
+        lead.ultimaAlt = new Date().toLocaleDateString("pt-BR");
+        lead.altPor = usuarioAtual ? usuarioAtual.nome : "-";
+        salvarLeads(); renderLeads();
+      }
+    });
+  });
+
+  tbody.querySelectorAll(".editbtn-lead").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var lead = leads.find(function(l){ return l.id==btn.dataset.id; });
+      if(lead) abrirModalLead(lead);
+    });
+  });
+
+  tbody.querySelectorAll(".delbtn-lead").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      if(!confirm("Excluir este lead?")) return;
+      leads = leads.filter(function(l){ return l.id!=btn.dataset.id; });
+      salvarLeads(); renderLeads(); updateLeadSelects();
+    });
+  });
+
   updateLeadMetrics();
 }
 
-document.getElementById("btnAddLead").addEventListener("click", function(){
-  var nome    = document.getElementById("lNome").value.trim();
-  var email   = document.getElementById("lEmail").value.trim();
-  var tel     = document.getElementById("lTel").value.trim();
-  var produto = document.getElementById("lProduto").value.trim();
-  if(!nome && !email && !tel) return;
-  leads.push({ id: Date.now(), nome: nome||"Sem nome", email: email, tel: tel, produto: produto, status: "novo", data: new Date().toLocaleDateString("pt-BR") });
-  document.getElementById("lNome").value = "";
-  document.getElementById("lEmail").value = "";
-  document.getElementById("lTel").value = "";
-  document.getElementById("lProduto").value = "";
+// MODAL LEAD
+function abrirModalLead(lead){
+  document.getElementById("leadModalTitulo").textContent = lead ? "Editar lead" : "Adicionar lead";
+  document.getElementById("leadEditId").value    = lead ? lead.id : "";
+  document.getElementById("lmNome").value        = lead ? lead.nome    : "";
+  document.getElementById("lmEmail").value       = lead ? lead.email   : "";
+  document.getElementById("lmTel").value         = lead ? lead.tel     : "";
+  document.getElementById("lmProduto").value     = lead ? lead.produto : "";
+  document.getElementById("lmOrigem").value      = lead ? (lead.origem||"") : "";
+  document.getElementById("lmResp").value        = lead ? (lead.responsavel||"") : (usuarioAtual ? usuarioAtual.nome : "");
+  document.getElementById("lmObs").value         = lead ? (lead.obs||"") : "";
+  document.getElementById("lmStatus").value      = lead ? lead.status : "novo";
+  document.getElementById("leadModal").style.display = "flex";
+}
+
+document.getElementById("btnSalvarLead").addEventListener("click", function(){
+  var nome    = document.getElementById("lmNome").value.trim();
+  var email   = document.getElementById("lmEmail").value.trim();
+  var tel     = document.getElementById("lmTel").value.trim();
+  var produto = document.getElementById("lmProduto").value.trim();
+  var origem  = document.getElementById("lmOrigem").value.trim();
+  var resp    = document.getElementById("lmResp").value.trim();
+  var obs     = document.getElementById("lmObs").value.trim();
+  var status  = document.getElementById("lmStatus").value;
+  if(!nome && !email && !tel){ alert("Preencha pelo menos nome, e-mail ou telefone."); return; }
+  var editId = document.getElementById("leadEditId").value;
+  if(editId){
+    var lead = leads.find(function(l){ return l.id==editId; });
+    if(lead){ lead.nome=nome; lead.email=email; lead.tel=tel; lead.produto=produto; lead.origem=origem; lead.responsavel=resp; lead.obs=obs; lead.status=status; lead.ultimaAlt=new Date().toLocaleDateString("pt-BR"); lead.altPor=usuarioAtual?usuarioAtual.nome:"-"; }
+  } else {
+    leads.push({ id:Date.now(), nome:nome||"Sem nome", email:email, tel:tel, produto:produto, origem:origem, responsavel:resp, obs:obs, status:status, data:new Date().toLocaleDateString("pt-BR"), altPor:usuarioAtual?usuarioAtual.nome:"-" });
+  }
+  salvarLeads();
+  document.getElementById("leadModal").style.display = "none";
   renderLeads(); updateLeadSelects();
 });
+
+document.getElementById("btnCancelarLead").addEventListener("click", function(){
+  document.getElementById("leadModal").style.display = "none";
+});
+document.getElementById("leadModal").addEventListener("click", function(e){
+  if(e.target===this) this.style.display="none";
+});
+
+document.getElementById("btnAddLead").addEventListener("click", function(){ abrirModalLead(null); });
 document.getElementById("filtroLead").addEventListener("change", renderLeads);
+if(document.getElementById("buscaLead")) document.getElementById("buscaLead").addEventListener("input", renderLeads);
 
 // CADENCIA
 document.getElementById("btnIniciarCad").addEventListener("click", function(){
@@ -921,18 +1055,17 @@ function renderCadencia(id){
   document.getElementById("cadenciaNome").textContent = "Cadencia ativa: " + cad.lead.nome;
   document.getElementById("cadenciaPassos").innerHTML = cad.passos.map(function(p,i){
     return "<div class=\"cad-passo\">"+
-      "<input type=\"checkbox\" class=\"cad-check cadck\" data-cid=\""+id+"\" data-idx=\""+i+"\""+(p.feito?" checked":"")+">"+
-      "<div style=\"flex:1\"><div style=\"font-size:0.85rem;font-weight:500;"+(p.feito?"text-decoration:line-through;color:var(--muted)":"")+"\">Dia "+p.dia+" - "+p.titulo+"</div>"+
+      "<input type=\"checkbox\" class=\"cad-check cadck\" data-cid=\""+id+"\" data-idx=\""+i+"\""+( p.feito?" checked":"")+">"+
+      "<div style=\"flex:1\"><div style=\"font-size:0.85rem;font-weight:500;"+(p.feito?"text-decoration:line-through;color:var(--muted)":"")+"\">" +
+        "Dia "+p.dia+" - "+p.titulo+"</div>"+
       "<div style=\"font-size:0.72rem;color:var(--muted);margin-top:2px\">"+p.canal+"</div></div>"+
       "<span class=\"badge "+(p.feito?"badge-ok":"badge-warn")+"\">"+(p.feito?"Feito":"Pendente")+"</span>"+
     "</div>";
   }).join("");
   document.querySelectorAll(".cadck").forEach(function(cb){
     cb.addEventListener("change", function(){
-      var cid = cb.dataset.cid;
-      var idx = parseInt(cb.dataset.idx);
-      if(cadencias[cid]) cadencias[cid].passos[idx].feito = cb.checked;
-      renderCadencia(cid);
+      var cid = cb.dataset.cid, idx = parseInt(cb.dataset.idx);
+      if(cadencias[cid]){ cadencias[cid].passos[idx].feito = cb.checked; renderCadencia(cid); }
     });
   });
 }
@@ -952,23 +1085,25 @@ document.getElementById("btnAddLog").addEventListener("click", function(){
     por: usuarioAtual ? usuarioAtual.nome : "-"
   });
   document.getElementById("logMsg").value = "";
-  renderLog();
+  salvarLeads(); renderLog();
 });
 
 function renderLog(){
   var tbody = document.getElementById("logBody");
-  if(!logMsgs.length){
-    tbody.innerHTML = "<tr><td colspan=\"5\" style=\"text-align:center;color:var(--muted);padding:2rem\">Nenhuma mensagem registrada ainda.</td></tr>";
+  var filtroLead = document.getElementById("filtroLogLead") ? document.getElementById("filtroLogLead").value : "";
+  var lista = filtroLead ? logMsgs.filter(function(m){ return m.lead===filtroLead; }) : logMsgs;
+  if(!lista.length){
+    tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;color:var(--muted);padding:2rem'>Nenhuma mensagem registrada ainda.</td></tr>";
     return;
   }
-  tbody.innerHTML = logMsgs.map(function(m){
+  tbody.innerHTML = lista.map(function(m){
     var bc = m.canal==="WhatsApp"?"badge-ok":m.canal==="E-mail"?"badge-info":"badge-warn";
     return "<tr>"+
-      "<td style=\"font-size:0.75rem;color:var(--muted)\">"+m.data+"</td>"+
-      "<td style=\"font-weight:500\">"+m.lead+"</td>"+
-      "<td><span class=\"badge "+bc+"\">"+m.canal+"</span></td>"+
-      "<td style=\"color:rgba(245,243,238,0.7)\">"+m.msg+"</td>"+
-      "<td style=\"font-size:0.78rem;color:var(--muted)\">"+m.por+"</td>"+
+      "<td style='font-size:0.75rem;color:var(--muted)'>"+m.data+"</td>"+
+      "<td style='font-weight:500'>"+m.lead+"</td>"+
+      "<td><span class='badge "+bc+"'>"+m.canal+"</span></td>"+
+      "<td style='color:rgba(245,243,238,0.7)'>"+m.msg+"</td>"+
+      "<td><span class='badge badge-info'>"+m.por+"</span></td>"+
     "</tr>";
   }).join("");
 }

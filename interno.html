@@ -231,29 +231,35 @@ body{background:var(--black);color:var(--white);font-family:'DM Sans',sans-serif
 
     <!-- PEDIDOS -->
     <div class="tab-panel" id="panel-pedidos">
+      <!-- alertas atrasados -->
+      <div id="alertaAtraso" style="display:none;background:rgba(220,50,50,0.12);border:1px solid rgba(220,50,50,0.3);padding:0.75rem 1rem;margin-bottom:1rem;font-size:0.82rem;color:#ff6b6b;display:flex;align-items:center;gap:8px">
+        <span style="font-size:1rem">🚨</span><span id="alertaAtrasoTexto"></span>
+      </div>
       <div class="metric-grid">
-        <div class="metric"><div class="metric-label">Na fila</div><div class="metric-val">9</div></div>
-        <div class="metric"><div class="metric-label">Imprimindo agora</div><div class="metric-val">3</div></div>
-        <div class="metric"><div class="metric-label">Aguard. envio</div><div class="metric-val">7</div></div>
-        <div class="metric metric-accent"><div class="metric-label">Atrasados</div><div class="metric-val">2</div></div>
+        <div class="metric"><div class="metric-label">Na fila</div><div class="metric-val" id="mFila">0</div></div>
+        <div class="metric"><div class="metric-label">Imprimindo agora</div><div class="metric-val" id="mImprimindo">0</div></div>
+        <div class="metric"><div class="metric-label">Prontos p/ envio</div><div class="metric-val" id="mPronto">0</div></div>
+        <div class="metric metric-accent"><div class="metric-label">Atrasados</div><div class="metric-val" id="mAtrasado">0</div></div>
       </div>
       <div class="panel">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
-          <div class="panel-title" style="margin:0">Fila de impressão</div>
-          <select id="filterStatus" style="background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.78rem;padding:0.4rem 0.65rem;outline:none;cursor:pointer">
-            <option value="todos">Todos</option>
-            <option value="imprimindo">Imprimindo</option>
-            <option value="fila">Na fila</option>
-            <option value="pronto">Pronto</option>
-          </select>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div class="panel-title" style="margin:0">Fila compartilhada</div>
+            <span style="font-size:0.65rem;color:var(--accent);letter-spacing:1px;text-transform:uppercase;border:1px solid rgba(232,66,10,0.3);padding:0.15rem 0.5rem">TEMPO REAL</span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <select id="filterStatus" style="background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.78rem;padding:0.4rem 0.65rem;outline:none;cursor:pointer">
+              <option value="todos">Todos</option>
+              <option value="fila">Na fila</option>
+              <option value="imprimindo">Imprimindo</option>
+              <option value="pronto">Pronto</option>
+              <option value="atrasado">Atrasado</option>
+              <option value="enviado">Enviado</option>
+            </select>
+            <button class="add-btn" id="btnSyncFila" style="padding:0.4rem 0.75rem;font-size:0.75rem">&#x21BB; Atualizar</button>
+          </div>
         </div>
-        <div id="filaLista">
-          <div class="queue-item" data-s="imprimindo"><div class="queue-icon">🖨</div><div style="flex:1"><div class="queue-name">Suporte articulado × 3</div><div class="queue-meta">Shopee · #3821 · Prazo: hoje 18h</div></div><span class="badge badge-info">Imprimindo</span></div>
-          <div class="queue-item" data-s="imprimindo"><div class="queue-icon">🖨</div><div style="flex:1"><div class="queue-name">Case iPhone 15 × 2</div><div class="queue-meta">Shopee · #3820 · Prazo: amanhã</div></div><span class="badge badge-info">Imprimindo</span></div>
-          <div class="queue-item" data-s="fila"><div class="queue-icon" style="background:rgba(212,160,23,0.12)">⏳</div><div style="flex:1"><div class="queue-name">Organizador gaveta × 5</div><div class="queue-meta">Mercado Livre · #ML-447 · Prazo: 20/03</div></div><span class="badge badge-warn">Na fila</span></div>
-          <div class="queue-item" data-s="fila"><div class="queue-icon" style="background:rgba(220,50,50,0.12)">🚨</div><div style="flex:1"><div class="queue-name">Engrenagem reposição × 2</div><div class="queue-meta">Amazon · #AMZ-112 · Prazo: ONTEM</div></div><span class="badge badge-danger">Atrasado</span></div>
-          <div class="queue-item" data-s="pronto"><div class="queue-icon" style="background:rgba(40,160,80,0.12)">✓</div><div style="flex:1"><div class="queue-name">Vaso geométrico × 2</div><div class="queue-meta">Shopee · #3815 · Aguard. coleta</div></div><span class="badge badge-ok">Pronto</span></div>
-        </div>
+        <div id="filaLista"></div>
       </div>
       <div class="panel">
         <div class="panel-title">Adicionar pedido</div>
@@ -264,8 +270,16 @@ body{background:var(--black);color:var(--white);font-family:'DM Sans',sans-serif
           </select>
           <input type="text" placeholder="Qtd" id="aQtd" style="width:70px">
           <input type="date" id="aPrazo" style="width:150px">
-          <button class="add-btn" id="btnAddPedido">+ Adicionar</button>
+          <input type="text" placeholder="Nº pedido (ex: #3821)" id="aNumPed" style="width:160px">
+          <button class="add-btn" id="btnAddPedido">+ Adicionar à fila</button>
         </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Histórico de alterações</div>
+        <table class="table">
+          <thead><tr><th>Horário</th><th>Pedido</th><th>Alteração</th><th>Por</th></tr></thead>
+          <tbody id="filaLog"><tr><td colspan="4" style="text-align:center;color:var(--muted);padding:1.5rem">Nenhuma alteração ainda.</td></tr></tbody>
+        </table>
       </div>
     </div>
 
@@ -341,17 +355,64 @@ body{background:var(--black);color:var(--white);font-family:'DM Sans',sans-serif
 
     <!-- PRODUTOS -->
     <div class="tab-panel" id="panel-produtos">
+
+      <!-- modal edição -->
+      <div id="prodModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;align-items:center;justify-content:center">
+        <div style="background:#1a1a1a;border:1px solid var(--border);padding:2rem;width:100%;max-width:480px;border-radius:2px;position:relative">
+          <div style="font-size:0.7rem;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:1.25rem" id="modalTitulo">Adicionar produto</div>
+          <input type="hidden" id="editId">
+          <div style="display:flex;flex-direction:column;gap:0.75rem">
+            <div><div style="font-size:0.68rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.3rem">Nome do produto</div>
+              <input type="text" id="fNome" placeholder="Ex: Suporte articulado" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.88rem;padding:0.7rem 0.85rem;outline:none"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem">
+              <div><div style="font-size:0.68rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.3rem">Preço de venda (R$)</div>
+                <input type="number" id="fPreco" placeholder="40" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.88rem;padding:0.7rem 0.85rem;outline:none"></div>
+              <div><div style="font-size:0.68rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.3rem">Custo (R$)</div>
+                <input type="number" id="fCusto" placeholder="23" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.88rem;padding:0.7rem 0.85rem;outline:none"></div>
+            </div>
+            <div><div style="font-size:0.68rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.3rem">Categoria</div>
+              <select id="fCateg" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.88rem;padding:0.7rem 0.85rem;outline:none;cursor:pointer">
+                <option value="suporte">Suporte / Fixação</option>
+                <option value="case">Case / Acessório</option>
+                <option value="organiz">Organização</option>
+                <option value="decor">Decoração</option>
+                <option value="tecnico">Peça técnica</option>
+                <option value="custom">Personalizado</option>
+              </select></div>
+            <div><div style="font-size:0.68rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.3rem">Canais ativos</div>
+              <div style="display:flex;gap:12px;margin-top:4px">
+                <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;cursor:pointer"><input type="checkbox" id="chShopee" style="accent-color:var(--accent)"> Shopee</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;cursor:pointer"><input type="checkbox" id="chMeli" style="accent-color:var(--accent)"> Mercado Livre</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;cursor:pointer"><input type="checkbox" id="chAmz" style="accent-color:var(--accent)"> Amazon</label>
+              </div></div>
+            <div><div style="font-size:0.68rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.3rem">Descrição (opcional)</div>
+              <textarea id="fDesc" placeholder="Descrição para anúncio..." rows="3" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.85rem;padding:0.7rem 0.85rem;outline:none;resize:vertical"></textarea></div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:1.25rem">
+            <button id="btnSalvarProd" class="add-btn" style="flex:1;padding:0.75rem;text-align:center">Salvar produto</button>
+            <button id="btnCancelarProd" style="padding:0.75rem 1.25rem;background:none;border:1px solid var(--border);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer">Cancelar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="metric-grid">
+        <div class="metric"><div class="metric-label">Total produtos</div><div class="metric-val" id="pTotal">0</div></div>
+        <div class="metric"><div class="metric-label">Margem média</div><div class="metric-val" id="pMargMedia">0%</div></div>
+        <div class="metric"><div class="metric-label">Canais ativos</div><div class="metric-val" id="pCanais">0</div></div>
+        <div class="metric metric-accent"><div class="metric-label">Abaixo de 35%</div><div class="metric-val" id="pBaixa">0</div></div>
+      </div>
+
       <div class="panel">
-        <div class="panel-title">Catálogo Fine Line 3D</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
+          <div class="panel-title" style="margin:0">Catálogo Fine Line 3D</div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="text" id="buscaProd" placeholder="Buscar produto..." style="background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.78rem;padding:0.4rem 0.75rem;outline:none;width:180px">
+            <button class="add-btn" id="btnNovoProd">+ Novo produto</button>
+          </div>
+        </div>
         <table class="table">
-          <thead><tr><th>Produto</th><th>Preço</th><th>Custo</th><th>Margem</th><th>Canais</th></tr></thead>
-          <tbody>
-            <tr><td style="font-weight:500">Suporte parede articulado</td><td>R$40</td><td>R$23</td><td><span class="badge badge-ok">43%</span></td><td><span class="badge mkt mkt-s" style="margin-right:3px">S</span><span class="badge mkt mkt-ml">ML</span></td></tr>
-            <tr><td style="font-weight:500">Case celular personalizado</td><td>R$40</td><td>R$24</td><td><span class="badge badge-ok">40%</span></td><td><span class="badge mkt mkt-s">S</span></td></tr>
-            <tr><td style="font-weight:500">Organizador de gaveta</td><td>R$40</td><td>R$28</td><td><span class="badge badge-warn">30%</span></td><td><span class="badge mkt mkt-ml">ML</span></td></tr>
-            <tr><td style="font-weight:500">Miniatura decorativa</td><td>R$40</td><td>R$22</td><td><span class="badge badge-ok">45%</span></td><td><span class="badge mkt mkt-s">S</span></td></tr>
-            <tr><td style="font-weight:500">Engrenagem reposição</td><td>R$50</td><td>R$24</td><td><span class="badge badge-ok">52%</span></td><td><span class="badge mkt mkt-a">AMZ</span></td></tr>
-          </tbody>
+          <thead><tr><th>Produto</th><th>Preço</th><th>Custo</th><th>Margem</th><th>Canais</th><th>Categoria</th><th>Ações</th></tr></thead>
+          <tbody id="prodBody"></tbody>
         </table>
       </div>
     </div>
@@ -460,7 +521,7 @@ body{background:var(--black);color:var(--white);font-family:'DM Sans',sans-serif
 
 var USUARIOS = {
   gimbu123:       { nome: "Vinicius", cargo: "Administrador", abas: ["dashboard","pedidos","precificacao","replicar","produtos","leads"] },
-  fineline3d2026: { nome: "Eduardo",  cargo: "Funcionario",   abas: ["pedidos","produtos","leads"] }
+  fineline3d2026: { nome: "Eduardo",  cargo: "Vendas",   abas: ["pedidos","produtos","leads"] }
 };
 var usuarioAtual = null;
 var leads = [];
@@ -486,6 +547,8 @@ function entrar(){
     setDate();
     aplicarPermissoes();
     setTimeout(initCharts, 150);
+    carregarFila(); renderFila();
+    carregarProdutos(); renderProdutos();
   } else {
     document.getElementById("loginErr").style.display = "block";
     document.getElementById("senhaInput").value = "";
@@ -545,26 +608,181 @@ bindSubTab("stLista","lista");
 bindSubTab("stCadencia","cadencia");
 bindSubTab("stLog","log");
 
-// FILA
-document.getElementById("filterStatus").addEventListener("change", function(){
-  var v = this.value;
-  document.querySelectorAll(".queue-item").forEach(function(el){
-    el.style.display = (v==="todos" || el.dataset.s===v) ? "flex" : "none";
+// ── FILA COMPARTILHADA ──
+var FILA_KEY = "fl3d_fila_v1";
+var FILA_LOG_KEY = "fl3d_fila_log_v1";
+var fila = [];
+var filaLog = [];
+
+var STATUS_CONFIG = {
+  fila:       { label:"Na fila",    badge:"badge-warn",   icon:"&#x23F3;", iconBg:"rgba(212,160,23,0.12)" },
+  imprimindo: { label:"Imprimindo", badge:"badge-info",   icon:"&#x1F5A8;",iconBg:"rgba(50,100,220,0.12)" },
+  pronto:     { label:"Pronto",     badge:"badge-ok",     icon:"&#x2713;", iconBg:"rgba(40,160,80,0.12)" },
+  atrasado:   { label:"Atrasado",   badge:"badge-danger", icon:"&#x1F6A8;",iconBg:"rgba(220,50,50,0.12)" },
+  enviado:    { label:"Enviado",    badge:"badge-ok",     icon:"&#x1F4E6;",iconBg:"rgba(40,160,80,0.08)" }
+};
+
+function salvarFila(){
+  try{ localStorage.setItem(FILA_KEY, JSON.stringify(fila)); } catch(e){}
+  try{ localStorage.setItem(FILA_LOG_KEY, JSON.stringify(filaLog.slice(0,100))); } catch(e){}
+}
+
+function carregarFila(){
+  try{
+    var d = localStorage.getItem(FILA_KEY);
+    if(d) fila = JSON.parse(d);
+    var dl = localStorage.getItem(FILA_LOG_KEY);
+    if(dl) filaLog = JSON.parse(dl);
+  } catch(e){ fila = []; filaLog = []; }
+}
+
+function registrarLog(nomePedido, alteracao){
+  var agora = new Date();
+  filaLog.unshift({
+    hora: agora.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"}) + " " + agora.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"}),
+    pedido: nomePedido,
+    alteracao: alteracao,
+    por: usuarioAtual ? usuarioAtual.nome : "-"
   });
-});
+  filaLog = filaLog.slice(0,100);
+}
+
+function verificarAtrasados(){
+  var hoje = new Date(); hoje.setHours(0,0,0,0);
+  fila.forEach(function(p){
+    if(p.prazo && p.status !== "enviado" && p.status !== "pronto"){
+      var pr = new Date(p.prazo); pr.setHours(0,0,0,0);
+      if(pr < hoje && p.status !== "atrasado"){
+        p.status = "atrasado";
+        registrarLog(p.nome, "Marcado automaticamente como Atrasado");
+      }
+    }
+  });
+}
+
+function renderFila(){
+  carregarFila();
+  verificarAtrasados();
+  salvarFila();
+
+  var filtro = document.getElementById("filterStatus").value;
+  var lista = filtro === "todos" ? fila : fila.filter(function(p){ return p.status === filtro; });
+
+  // metrics
+  document.getElementById("mFila").textContent       = fila.filter(function(p){ return p.status==="fila"; }).length;
+  document.getElementById("mImprimindo").textContent  = fila.filter(function(p){ return p.status==="imprimindo"; }).length;
+  document.getElementById("mPronto").textContent      = fila.filter(function(p){ return p.status==="pronto"; }).length;
+  document.getElementById("mAtrasado").textContent    = fila.filter(function(p){ return p.status==="atrasado"; }).length;
+
+  // alerta
+  var atrasados = fila.filter(function(p){ return p.status==="atrasado"; });
+  var alertEl = document.getElementById("alertaAtraso");
+  if(atrasados.length > 0){
+    alertEl.style.display = "flex";
+    document.getElementById("alertaAtrasoTexto").textContent =
+      atrasados.length + " pedido(s) atrasado(s): " + atrasados.map(function(p){ return p.nome; }).join(", ");
+  } else {
+    alertEl.style.display = "none";
+  }
+
+  // lista
+  var el = document.getElementById("filaLista");
+  if(!lista.length){
+    el.innerHTML = "<div style='text-align:center;color:var(--muted);padding:2rem;font-size:0.85rem'>Nenhum pedido nesta categoria.</div>";
+  } else {
+    el.innerHTML = lista.map(function(p){
+      var cfg = STATUS_CONFIG[p.status] || STATUS_CONFIG.fila;
+      var opts = Object.keys(STATUS_CONFIG).map(function(s){
+        return "<option value='"+s+"'"+(p.status===s?" selected":"")+">"+STATUS_CONFIG[s].label+"</option>";
+      }).join("");
+      var prazoStr = p.prazo ? " · Prazo: "+new Date(p.prazo).toLocaleDateString("pt-BR") : "";
+      var atStr = p.atualizadoPor ? " · Por: "+p.atualizadoPor : "";
+      return "<div class='queue-item' data-id='"+p.id+"'>"+
+        "<div class='queue-icon' style='background:"+cfg.iconBg+"'>"+cfg.icon+"</div>"+
+        "<div style='flex:1'>"+
+          "<div class='queue-name'>"+p.nome+(p.qtd?" × "+p.qtd:"")+"</div>"+
+          "<div class='queue-meta'>"+p.mkt+(p.numPed?" · "+p.numPed:"")+prazoStr+atStr+"</div>"+
+        "</div>"+
+        "<select class='stsel-fila' data-id='"+p.id+"' style='background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:var(--white);font-size:0.75rem;padding:0.25rem 0.5rem;outline:none;cursor:pointer;margin-right:8px'>"+opts+"</select>"+
+        "<button class='delbtn-fila' data-id='"+p.id+"' style='background:none;border:none;color:var(--muted);cursor:pointer;font-size:0.8rem'>&#x2715;</button>"+
+      "</div>";
+    }).join("");
+
+    el.querySelectorAll(".stsel-fila").forEach(function(sel){
+      sel.addEventListener("change", function(){
+        var pedido = fila.find(function(p){ return p.id==sel.dataset.id; });
+        if(pedido){
+          var oldStatus = STATUS_CONFIG[pedido.status].label;
+          pedido.status = sel.value;
+          pedido.atualizadoPor = usuarioAtual ? usuarioAtual.nome : "-";
+          registrarLog(pedido.nome, oldStatus + " → " + STATUS_CONFIG[sel.value].label);
+          salvarFila();
+          renderFila();
+          renderFilaLog();
+        }
+      });
+    });
+    el.querySelectorAll(".delbtn-fila").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var pedido = fila.find(function(p){ return p.id==btn.dataset.id; });
+        if(pedido){
+          registrarLog(pedido.nome, "Pedido removido da fila");
+          fila = fila.filter(function(p){ return p.id!=btn.dataset.id; });
+          salvarFila();
+          renderFila();
+          renderFilaLog();
+        }
+      });
+    });
+  }
+  renderFilaLog();
+}
+
+function renderFilaLog(){
+  var tbody = document.getElementById("filaLog");
+  if(!filaLog.length){
+    tbody.innerHTML = "<tr><td colspan='4' style='text-align:center;color:var(--muted);padding:1.5rem'>Nenhuma alteração ainda.</td></tr>";
+    return;
+  }
+  tbody.innerHTML = filaLog.slice(0,20).map(function(l){
+    return "<tr>"+
+      "<td style='font-size:0.72rem;color:var(--muted)'>"+l.hora+"</td>"+
+      "<td style='font-weight:500'>"+l.pedido+"</td>"+
+      "<td style='color:rgba(245,243,238,0.7)'>"+l.alteracao+"</td>"+
+      "<td><span class='badge badge-info'>"+l.por+"</span></td>"+
+    "</tr>";
+  }).join("");
+}
+
+document.getElementById("filterStatus").addEventListener("change", renderFila);
+document.getElementById("btnSyncFila").addEventListener("click", renderFila);
+
 document.getElementById("btnAddPedido").addEventListener("click", function(){
-  var prod = document.getElementById("aProd").value.trim();
-  var mkt  = document.getElementById("aMkt").value;
-  var qtd  = document.getElementById("aQtd").value;
-  var prz  = document.getElementById("aPrazo").value;
+  var prod   = document.getElementById("aProd").value.trim();
+  var mkt    = document.getElementById("aMkt").value;
+  var qtd    = document.getElementById("aQtd").value.trim();
+  var prazo  = document.getElementById("aPrazo").value;
+  var numPed = document.getElementById("aNumPed").value.trim();
   if(!prod) return;
-  var el = document.createElement("div");
-  el.className = "queue-item"; el.dataset.s = "fila";
-  el.innerHTML = "<div class=\"queue-icon\" style=\"background:rgba(212,160,23,0.12)\">&#x23F3;</div><div style=\"flex:1\"><div class=\"queue-name\">"+prod+(qtd?" x "+qtd:"")+"</div><div class=\"queue-meta\">"+mkt+(prz?" · Prazo: "+prz:"")+"</div></div><span class=\"badge badge-warn\">Na fila</span>";
-  document.getElementById("filaLista").appendChild(el);
+  var novoPedido = {
+    id: Date.now(), nome: prod, mkt: mkt, qtd: qtd,
+    prazo: prazo, numPed: numPed, status: "fila",
+    criadoPor: usuarioAtual ? usuarioAtual.nome : "-",
+    atualizadoPor: usuarioAtual ? usuarioAtual.nome : "-"
+  };
+  fila.push(novoPedido);
+  registrarLog(prod, "Adicionado à fila por " + (usuarioAtual ? usuarioAtual.nome : "-"));
+  salvarFila();
   document.getElementById("aProd").value = "";
   document.getElementById("aQtd").value = "";
+  document.getElementById("aPrazo").value = "";
+  document.getElementById("aNumPed").value = "";
+  renderFila();
+  renderFilaLog();
 });
+
+// auto-refresh a cada 30s
+setInterval(renderFila, 30000);
 
 // CALC
 function calc(){
@@ -754,6 +972,149 @@ function renderLog(){
     "</tr>";
   }).join("");
 }
+
+// ── PRODUTOS ──
+var PROD_KEY = "fl3d_produtos_v1";
+var produtos = [];
+
+var PROD_DEFAULTS = [
+  {id:1, nome:"Suporte parede articulado", preco:40, custo:23, categ:"suporte", shopee:true,  meli:true,  amz:false, desc:""},
+  {id:2, nome:"Case celular personalizado",preco:40, custo:24, categ:"case",    shopee:true,  meli:false, amz:false, desc:""},
+  {id:3, nome:"Organizador de gaveta",     preco:40, custo:28, categ:"organiz", shopee:false, meli:true,  amz:false, desc:""},
+  {id:4, nome:"Miniatura decorativa",      preco:40, custo:22, categ:"decor",   shopee:true,  meli:false, amz:false, desc:""},
+  {id:5, nome:"Engrenagem reposição",      preco:50, custo:24, categ:"tecnico", shopee:false, meli:false, amz:true,  desc:""}
+];
+
+var CATEG_LABELS = {suporte:"Suporte",case:"Case",organiz:"Organização",decor:"Decoração",tecnico:"Peça técnica",custom:"Personalizado"};
+
+function carregarProdutos(){
+  try{
+    var d = localStorage.getItem(PROD_KEY);
+    produtos = d ? JSON.parse(d) : JSON.parse(JSON.stringify(PROD_DEFAULTS));
+  } catch(e){ produtos = JSON.parse(JSON.stringify(PROD_DEFAULTS)); }
+}
+
+function salvarProdutos(){
+  try{ localStorage.setItem(PROD_KEY, JSON.stringify(produtos)); } catch(e){}
+}
+
+function calcMargem(preco, custo){
+  if(!preco || preco===0) return 0;
+  return Math.round(((preco - custo) / preco) * 100);
+}
+
+function renderProdutos(){
+  var busca = document.getElementById("buscaProd").value.toLowerCase();
+  var lista = busca ? produtos.filter(function(p){ return p.nome.toLowerCase().includes(busca); }) : produtos;
+
+  // metrics
+  document.getElementById("pTotal").textContent = produtos.length;
+  var margens = produtos.map(function(p){ return calcMargem(p.preco, p.custo); });
+  var mediaM = margens.length ? Math.round(margens.reduce(function(a,b){return a+b;},0)/margens.length) : 0;
+  document.getElementById("pMargMedia").textContent = mediaM + "%";
+  var canaisSet = new Set();
+  produtos.forEach(function(p){ if(p.shopee) canaisSet.add("S"); if(p.meli) canaisSet.add("ML"); if(p.amz) canaisSet.add("AMZ"); });
+  document.getElementById("pCanais").textContent = canaisSet.size;
+  document.getElementById("pBaixa").textContent = produtos.filter(function(p){ return calcMargem(p.preco,p.custo) < 35; }).length;
+
+  var tbody = document.getElementById("prodBody");
+  if(!lista.length){
+    tbody.innerHTML = "<tr><td colspan='7' style='text-align:center;color:var(--muted);padding:2rem'>Nenhum produto encontrado.</td></tr>";
+    return;
+  }
+
+  tbody.innerHTML = lista.map(function(p){
+    var marg = calcMargem(p.preco, p.custo);
+    var mClass = marg >= 40 ? "badge-ok" : marg >= 30 ? "badge-warn" : "badge-danger";
+    var canais = "";
+    if(p.shopee) canais += "<span class='badge mkt mkt-s' style='margin-right:3px'>S</span>";
+    if(p.meli)   canais += "<span class='badge mkt mkt-ml' style='margin-right:3px'>ML</span>";
+    if(p.amz)    canais += "<span class='badge mkt mkt-a'>AMZ</span>";
+    if(!canais)  canais = "<span style='color:var(--muted);font-size:0.75rem'>—</span>";
+    return "<tr>"+
+      "<td style='font-weight:500'>"+p.nome+"</td>"+
+      "<td>R$"+p.preco+"</td>"+
+      "<td>R$"+p.custo+"</td>"+
+      "<td><span class='badge "+mClass+"'>"+marg+"%</span></td>"+
+      "<td>"+canais+"</td>"+
+      "<td><span style='font-size:0.75rem;color:var(--muted)'>"+( CATEG_LABELS[p.categ]||p.categ)+"</span></td>"+
+      "<td style='white-space:nowrap'>"+
+        "<button class='editbtn-prod' data-id='"+p.id+"' style='background:none;border:1px solid var(--border);color:var(--muted);cursor:pointer;font-size:0.75rem;padding:0.2rem 0.6rem;margin-right:4px'>editar</button>"+
+        "<button class='delbtn-prod'  data-id='"+p.id+"' style='background:none;border:1px solid rgba(220,50,50,0.3);color:#ff6b6b;cursor:pointer;font-size:0.75rem;padding:0.2rem 0.6rem'>excluir</button>"+
+      "</td>"+
+    "</tr>";
+  }).join("");
+
+  tbody.querySelectorAll(".editbtn-prod").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var p = produtos.find(function(x){ return x.id==btn.dataset.id; });
+      if(!p) return;
+      document.getElementById("modalTitulo").textContent = "Editar produto";
+      document.getElementById("editId").value = p.id;
+      document.getElementById("fNome").value  = p.nome;
+      document.getElementById("fPreco").value = p.preco;
+      document.getElementById("fCusto").value = p.custo;
+      document.getElementById("fCateg").value = p.categ;
+      document.getElementById("fDesc").value  = p.desc||"";
+      document.getElementById("chShopee").checked = !!p.shopee;
+      document.getElementById("chMeli").checked   = !!p.meli;
+      document.getElementById("chAmz").checked    = !!p.amz;
+      document.getElementById("prodModal").style.display = "flex";
+    });
+  });
+
+  tbody.querySelectorAll(".delbtn-prod").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      if(!confirm("Excluir este produto?")) return;
+      produtos = produtos.filter(function(p){ return p.id!=btn.dataset.id; });
+      salvarProdutos(); renderProdutos();
+    });
+  });
+}
+
+function abrirModalNovo(){
+  document.getElementById("modalTitulo").textContent = "Adicionar produto";
+  document.getElementById("editId").value = "";
+  document.getElementById("fNome").value  = "";
+  document.getElementById("fPreco").value = "";
+  document.getElementById("fCusto").value = "";
+  document.getElementById("fCateg").value = "suporte";
+  document.getElementById("fDesc").value  = "";
+  document.getElementById("chShopee").checked = false;
+  document.getElementById("chMeli").checked   = false;
+  document.getElementById("chAmz").checked    = false;
+  document.getElementById("prodModal").style.display = "flex";
+}
+
+function fecharModal(){
+  document.getElementById("prodModal").style.display = "none";
+}
+
+document.getElementById("btnNovoProd").addEventListener("click", abrirModalNovo);
+document.getElementById("btnCancelarProd").addEventListener("click", fecharModal);
+document.getElementById("prodModal").addEventListener("click", function(e){ if(e.target===this) fecharModal(); });
+
+document.getElementById("btnSalvarProd").addEventListener("click", function(){
+  var nome  = document.getElementById("fNome").value.trim();
+  var preco = parseFloat(document.getElementById("fPreco").value)||0;
+  var custo = parseFloat(document.getElementById("fCusto").value)||0;
+  var categ = document.getElementById("fCateg").value;
+  var desc  = document.getElementById("fDesc").value.trim();
+  var shopee= document.getElementById("chShopee").checked;
+  var meli  = document.getElementById("chMeli").checked;
+  var amz   = document.getElementById("chAmz").checked;
+  if(!nome){ alert("Informe o nome do produto."); return; }
+  var editId = document.getElementById("editId").value;
+  if(editId){
+    var p = produtos.find(function(x){ return x.id==editId; });
+    if(p){ p.nome=nome; p.preco=preco; p.custo=custo; p.categ=categ; p.desc=desc; p.shopee=shopee; p.meli=meli; p.amz=amz; }
+  } else {
+    produtos.push({ id: Date.now(), nome:nome, preco:preco, custo:custo, categ:categ, desc:desc, shopee:shopee, meli:meli, amz:amz });
+  }
+  salvarProdutos(); fecharModal(); renderProdutos();
+});
+
+document.getElementById("buscaProd").addEventListener("input", renderProdutos);
 
 // CHARTS
 function initCharts(){

@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fine Line 3D — Área Interna</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #0d0d0d;
+  --white: #f5f3ee;
+  --accent: #e8420a;
+  --gray: #888;
+  --card: #161616;
+  --border: rgba(255,255,255,0.08);
+  --muted: rgba(245,243,238,0.45);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+}
+
+/* ── LOGIN ── */
+#loginScreen {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  background:
+    radial-gradient(ellipse 50% 60% at 50% 50%, rgba(232,66,10,0.07) 0%, transparent 70%),
+    repeating-linear-gradient(0deg, transparent, transparent 79px, rgba(255,255,255,0.02) 80px),
+    repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(255,255,255,0.02) 80px);
+}
+.login-box {
+  width: 100%; max-width: 380px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 2.5rem;
+  animation: fadeUp .5s ease both;
+}
+.login-logo {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem; letter-spacing: 2px;
+  margin-bottom: 2rem;
+}
+.login-logo-lines { display: flex; align-items: flex-end; gap: 3px; }
+.ll { width: 3px; border-radius: 2px; background: var(--accent); }
+.login-title { font-size: 0.72rem; font-weight: 500; letter-spacing: 2px; color: var(--accent); text-transform: uppercase; margin-bottom: 0.5rem; }
+.login-sub { font-size: 0.85rem; color: var(--muted); margin-bottom: 2rem; }
+.login-label { font-size: 0.68rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: rgba(245,243,238,0.35); display: block; margin-bottom: 0.4rem; }
+.login-input {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  color: var(--white); font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem; font-weight: 300;
+  padding: 0.85rem 1rem; outline: none;
+  transition: border-color .2s; margin-bottom: 1.25rem;
+}
+.login-input:focus { border-color: var(--accent); }
+.login-btn {
+  width: 100%; background: var(--accent); color: var(--white);
+  border: none; padding: 0.9rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem; font-weight: 500;
+  cursor: pointer; transition: opacity .2s;
+}
+.login-btn:hover { opacity: 0.85; }
+.login-error {
+  font-size: 0.8rem; color: #ff6b6b;
+  margin-top: 0.75rem; display: none;
+}
+.login-back { display: block; text-align: center; margin-top: 1.25rem; font-size: 0.78rem; color: var(--muted); }
+.login-back a { color: var(--muted); text-decoration: underline; }
+
+/* ── APP ── */
+#app { display: none; }
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(13,13,13,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.9rem 2rem;
+}
+.topbar-logo {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.2rem; letter-spacing: 2px;
+}
+.topbar-lines { display: flex; align-items: flex-end; gap: 3px; }
+.tl { width: 2px; border-radius: 2px; background: var(--accent); }
+.topbar-badge {
+  font-size: 0.62rem; font-weight: 500; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--accent);
+  border: 1px solid rgba(232,66,10,0.35);
+  padding: 0.2rem 0.55rem;
+}
+.topbar-right { display: flex; align-items: center; gap: 1rem; }
+.topbar-date { font-size: 0.78rem; color: var(--muted); }
+.logout-btn {
+  font-size: 0.75rem; color: var(--muted);
+  background: none; border: 1px solid var(--border);
+  color: var(--muted); padding: 0.35rem 0.8rem;
+  cursor: pointer; font-family: 'DM Sans', sans-serif;
+  transition: color .2s;
+}
+.logout-btn:hover { color: var(--white); }
+.nav-tabs {
+  background: #111;
+  border-bottom: 1px solid var(--border);
+  display: flex; gap: 0; overflow-x: auto;
+  padding: 0 2rem;
+}
+.nav-tab {
+  font-size: 0.78rem; font-weight: 400; letter-spacing: 0.5px;
+  color: var(--muted); padding: 0.9rem 1.25rem;
+  cursor: pointer; border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s;
+  white-space: nowrap; background: none; border-top: none; border-left: none; border-right: none;
+  font-family: 'DM Sans', sans-serif;
+}
+.nav-tab.active { color: var(--white); border-bottom-color: var(--accent); }
+.nav-tab:hover { color: var(--white); }
+.content { padding: 2rem; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* metrics */
+.metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 2px; margin-bottom: 2px; }
+.metric {
+  background: var(--card); padding: 1.25rem 1.5rem;
+}
+.metric-label { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.5px; margin-bottom: 0.4rem; }
+.metric-val { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 1px; color: var(--white); }
+.metric-sub { font-size: 0.72rem; color: rgba(245,243,238,0.3); margin-top: 0.25rem; }
+.metric-accent .metric-val { color: var(--accent); }
+
+/* cards & tables */
+.dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-bottom: 2px; }
+@media(max-width:900px){ .dash-grid { grid-template-columns: 1fr; } }
+.panel { background: var(--card); padding: 1.5rem; }
+.panel-title { font-size: 0.7rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 1.25rem; }
+.table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.table th { font-size: 0.65rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(245,243,238,0.25); text-align: left; padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border); }
+.table td { padding: 0.75rem 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.04); color: rgba(245,243,238,0.85); vertical-align: middle; }
+.table tr:last-child td { border-bottom: none; }
+.badge { display: inline-block; font-size: 0.65rem; font-weight: 500; padding: 0.2rem 0.55rem; letter-spacing: 0.5px; }
+.badge-ok { background: rgba(40,160,80,0.15); color: #4caf7a; }
+.badge-warn { background: rgba(200,140,0,0.15); color: #d4a017; }
+.badge-info { background: rgba(50,100,220,0.15); color: #6699ee; }
+.badge-danger { background: rgba(220,50,50,0.15); color: #ff6b6b; }
+.mkt { font-size: 0.65rem; padding: 0.18rem 0.5rem; font-weight: 500; }
+.mkt-s { background: rgba(232,66,10,0.15); color: #e8420a; }
+.mkt-ml { background: rgba(40,160,80,0.12); color: #4caf7a; }
+.mkt-a { background: rgba(200,140,0,0.12); color: #d4a017; }
+
+/* progress */
+.progress { height: 4px; background: rgba(255,255,255,0.07); overflow: hidden; margin-top: 0.4rem; }
+.progress-fill { height: 100%; background: var(--accent); }
+
+/* charts */
+.chart-wrap { position: relative; }
+
+/* queue */
+.queue-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 0.85rem 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.queue-item:last-child { border-bottom: none; }
+.queue-icon {
+  width: 34px; height: 34px; background: rgba(232,66,10,0.12);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.queue-name { font-size: 0.85rem; font-weight: 500; }
+.queue-meta { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+
+/* calc */
+.calc-field { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.85rem; flex-wrap: wrap; }
+.calc-field label { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.5px; min-width: 160px; }
+.calc-field input, .calc-field select {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  color: var(--white); font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem; padding: 0.55rem 0.85rem;
+  outline: none; width: 140px; transition: border-color .2s;
+}
+.calc-field input:focus, .calc-field select:focus { border-color: var(--accent); }
+.calc-result { background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 1.25rem; margin-top: 1rem; }
+.calc-row { display: flex; justify-content: space-between; font-size: 0.82rem; padding: 0.35rem 0; color: var(--muted); }
+.calc-row.total { color: var(--white); font-weight: 500; font-size: 1rem; border-top: 1px solid var(--border); margin-top: 0.5rem; padding-top: 0.75rem; }
+.calc-row.lucro { color: #4caf7a; font-weight: 500; }
+
+/* checklist */
+.check-item { display: flex; align-items: center; gap: 10px; padding: 0.7rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.85rem; }
+.check-item:last-child { border-bottom: none; }
+.check-item input[type=checkbox] { accent-color: var(--accent); width: 15px; height: 15px; }
+.check-done { text-decoration: line-through; color: var(--muted); }
+
+/* add form */
+.add-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 1rem; align-items: flex-end; }
+.add-row input, .add-row select {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  color: var(--white); font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem; padding: 0.55rem 0.75rem;
+  outline: none; transition: border-color .2s;
+}
+.add-row input { width: 180px; }
+.add-row input:focus, .add-row select:focus { border-color: var(--accent); }
+.add-btn {
+  background: rgba(232,66,10,0.15); border: 1px solid rgba(232,66,10,0.3);
+  color: var(--accent); font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem; padding: 0.55rem 1.1rem; cursor: pointer;
+  transition: background .2s;
+}
+.add-btn:hover { background: rgba(232,66,10,0.25); }
+
+/* diff table */
+.diff-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 1.25rem; }
+.diff-table th { background: rgba(255,255,255,0.04); font-size: 0.65rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); padding: 0.6rem 0.75rem; text-align: left; }
+.diff-table td { padding: 0.65rem 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.04); color: rgba(245,243,238,0.7); }
+
+/* expansion status */
+.exp-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; margin-bottom: 1.5rem; }
+.exp-card { background: var(--card); padding: 1.25rem; text-align: center; }
+.exp-name { font-weight: 500; font-size: 0.9rem; margin: 0.5rem 0 0.25rem; }
+.exp-status { font-size: 0.72rem; color: var(--muted); margin-bottom: 0.5rem; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media(max-width:600px){
+  .topbar { padding: 0.75rem 1rem; }
+  .content { padding: 1rem; }
+  .exp-grid { grid-template-columns: 1fr; }
+  .calc-field { flex-direction: column; align-items: flex-start; }
+  .calc-field label { min-width: unset; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="login-logo-lines">
+        <div class="ll" style="height:20px"></div>
+        <div class="ll" style="height:13px;opacity:.4"></div>
+        <div class="ll" style="height:17px;opacity:.7"></div>
+      </div>
+      Fine Line 3D
+    </div>
+    <div class="login-title">Área interna</div>
+    <p class="login-sub">Acesso exclusivo para funcionários. Informe a senha para continuar.</p>
+    <label class="login-label">Senha</label>
+    <input type="password" class="login-input" id="senhaInput" placeholder="••••••••" onkeydown="if(event.key==='Enter')entrar()">
+    <button class="login-btn" onclick="entrar()">Entrar</button>
+    <div class="login-error" id="loginErr">Senha incorreta. Tente novamente.</div>
+    <span class="login-back"><a href="index.html">← Voltar ao site</a></span>
+  </div>
+</div>
+
+<!-- ── APP ── -->
+<div id="app">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="topbar-logo">
+        <div class="topbar-lines">
+          <div class="tl" style="height:18px"></div>
+          <div class="tl" style="height:11px;opacity:.4"></div>
+          <div class="tl" style="height:15px;opacity:.7"></div>
+        </div>
+        Fine Line 3D
+      </div>
+      <div class="topbar-badge">Área Interna</div>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-date" id="topDate"></span>
+      <button class="logout-btn" onclick="sair()">Sair</button>
+    </div>
+  </div>
+
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showTab('dashboard',this)">Dashboard</button>
+    <button class="nav-tab" onclick="showTab('pedidos',this)">Pedidos & Fila</button>
+    <button class="nav-tab" onclick="showTab('precificacao',this)">Precificação</button>
+    <button class="nav-tab" onclick="showTab('replicar',this)">Replicar Operação</button>
+    <button class="nav-tab" onclick="showTab('produtos',this)">Produtos</button>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="tab-panel active" id="panel-dashboard">
+      <div class="metric-grid">
+        <div class="metric"><div class="metric-label">Faturamento do mês</div><div class="metric-val">R$8.420</div><div class="metric-sub">+12% vs mês passado</div></div>
+        <div class="metric"><div class="metric-label">Pedidos ativos</div><div class="metric-val">23</div><div class="metric-sub">7 em produção agora</div></div>
+        <div class="metric"><div class="metric-label">Ticket médio</div><div class="metric-val">R$62</div><div class="metric-sub">Meta: R$70</div></div>
+        <div class="metric metric-accent"><div class="metric-label">Margem média</div><div class="metric-val">38%</div><div class="metric-sub">Líquido após comissão</div></div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="panel">
+          <div class="panel-title">Vendas por marketplace</div>
+          <div class="chart-wrap" style="height:200px"><canvas id="mktChart"></canvas></div>
+          <div style="display:flex;gap:16px;margin-top:12px;font-size:0.72rem;color:var(--muted)">
+            <span style="display:flex;align-items:center;gap:5px"><span style="width:8px;height:8px;background:#e8420a;display:inline-block"></span>Shopee 68%</span>
+            <span style="display:flex;align-items:center;gap:5px"><span style="width:8px;height:8px;background:#4caf7a;display:inline-block"></span>Meli 22%</span>
+            <span style="display:flex;align-items:center;gap:5px"><span style="width:8px;height:8px;background:#d4a017;display:inline-block"></span>Amazon 10%</span>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Faturamento — últimas 4 semanas</div>
+          <div class="chart-wrap" style="height:200px"><canvas id="recChart"></canvas></div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:2px">
+        <div class="panel-title">Produtos mais vendidos</div>
+        <table class="table">
+          <thead><tr><th>Produto</th><th>Unid.</th><th>Receita</th><th>Margem</th><th>Canal</th></tr></thead>
+          <tbody>
+            <tr><td>Suporte de parede articulado</td><td>41</td><td>R$1.640</td><td><span class="badge badge-ok">42%</span></td><td><span class="badge mkt mkt-s">Shopee</span></td></tr>
+            <tr><td>Case personalizado celular</td><td>28</td><td>R$1.120</td><td><span class="badge badge-ok">39%</span></td><td><span class="badge mkt mkt-s">Shopee</span></td></tr>
+            <tr><td>Organizador de gaveta</td><td>19</td><td>R$760</td><td><span class="badge badge-warn">31%</span></td><td><span class="badge mkt mkt-ml">Meli</span></td></tr>
+            <tr><td>Miniatura decorativa</td><td>17</td><td>R$680</td><td><span class="badge badge-ok">45%</span></td><td><span class="badge mkt mkt-s">Shopee</span></td></tr>
+            <tr><td>Engrenagem reposição</td><td>12</td><td>R$600</td><td><span class="badge badge-ok">52%</span></td><td><span class="badge mkt mkt-a">Amazon</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Meta mensal</div>
+        <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:6px">
+          <span style="color:var(--muted)">R$8.420 / R$12.000</span>
+          <span style="font-weight:500">70%</span>
+        </div>
+        <div class="progress"><div class="progress-fill" style="width:70%"></div></div>
+        <div style="font-size:0.72rem;color:var(--muted);margin-top:8px">Faltam R$3.580 · ~13 dias restantes no mês</div>
+      </div>
+    </div>
+
+    <!-- PEDIDOS & FILA -->
+    <div class="tab-panel" id="panel-pedidos">
+      <div class="metric-grid">
+        <div class="metric"><div class="metric-label">Na fila</div><div class="metric-val">9</div></div>
+        <div class="metric"><div class="metric-label">Imprimindo agora</div><div class="metric-val">3</div></div>
+        <div class="metric"><div class="metric-label">Aguard. envio</div><div class="metric-val">7</div></div>
+        <div class="metric metric-accent"><div class="metric-label">Atrasados</div><div class="metric-val">2</div></div>
+      </div>
+
+      <div class="panel" style="margin-bottom:2px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+          <div class="panel-title" style="margin:0">Fila de impressão</div>
+          <select id="filterStatus" onchange="filtrarFila()" style="background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.78rem;padding:0.4rem 0.65rem;outline:none;cursor:pointer">
+            <option value="todos">Todos</option>
+            <option value="imprimindo">Imprimindo</option>
+            <option value="fila">Na fila</option>
+            <option value="pronto">Pronto</option>
+          </select>
+        </div>
+        <div id="filaLista">
+          <div class="queue-item" data-s="imprimindo"><div class="queue-icon">🖨</div><div style="flex:1"><div class="queue-name">Suporte articulado × 3</div><div class="queue-meta">Shopee · #3821 · Prazo: hoje 18h</div></div><span class="badge badge-info">Imprimindo</span></div>
+          <div class="queue-item" data-s="imprimindo"><div class="queue-icon">🖨</div><div style="flex:1"><div class="queue-name">Case iPhone 15 × 2</div><div class="queue-meta">Shopee · #3820 · Prazo: amanhã</div></div><span class="badge badge-info">Imprimindo</span></div>
+          <div class="queue-item" data-s="fila"><div class="queue-icon" style="background:rgba(212,160,23,0.12)">⏳</div><div style="flex:1"><div class="queue-name">Organizador gaveta × 5</div><div class="queue-meta">Mercado Livre · #ML-447 · Prazo: 20/03</div></div><span class="badge badge-warn">Na fila</span></div>
+          <div class="queue-item" data-s="fila"><div class="queue-icon" style="background:rgba(212,160,23,0.12)">⏳</div><div style="flex:1"><div class="queue-name">Miniatura Funko × 1</div><div class="queue-meta">Shopee · #3819 · Prazo: 21/03</div></div><span class="badge badge-warn">Na fila</span></div>
+          <div class="queue-item" data-s="fila"><div class="queue-icon" style="background:rgba(220,50,50,0.12)">🚨</div><div style="flex:1"><div class="queue-name">Engrenagem reposição × 2</div><div class="queue-meta">Amazon · #AMZ-112 · Prazo: ONTEM</div></div><span class="badge badge-danger">Atrasado</span></div>
+          <div class="queue-item" data-s="pronto"><div class="queue-icon" style="background:rgba(40,160,80,0.12)">✓</div><div style="flex:1"><div class="queue-name">Vaso geométrico × 2</div><div class="queue-meta">Shopee · #3815 · Aguard. coleta</div></div><span class="badge badge-ok">Pronto</span></div>
+          <div class="queue-item" data-s="pronto"><div class="queue-icon" style="background:rgba(40,160,80,0.12)">✓</div><div style="flex:1"><div class="queue-name">Suporte monitor × 1</div><div class="queue-meta">Meli · #ML-443 · Aguard. coleta</div></div><span class="badge badge-ok">Pronto</span></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Adicionar pedido</div>
+        <div class="add-row">
+          <input type="text" placeholder="Nome do produto" id="aProd">
+          <select id="aMkt" style="background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.82rem;padding:0.55rem 0.75rem;outline:none">
+            <option>Shopee</option><option>Mercado Livre</option><option>Amazon</option>
+          </select>
+          <input type="text" placeholder="Qtd" id="aQtd" style="width:70px">
+          <input type="date" id="aPrazo" style="width:150px">
+          <button class="add-btn" onclick="addPedido()">+ Adicionar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRECIFICAÇÃO -->
+    <div class="tab-panel" id="panel-precificacao">
+      <div class="panel">
+        <div class="panel-title">Calculadora de preço e margem</div>
+        <div class="calc-field"><label>Custo filamento (R$/kg)</label><input type="number" id="pFil" value="150" oninput="calc()"> <span style="font-size:0.75rem;color:var(--muted)">gramas usados</span> <input type="number" id="pGr" value="80" style="width:80px" oninput="calc()"></div>
+        <div class="calc-field"><label>Energia (R$/hora)</label><input type="number" id="pEn" value="0.80" step="0.1" oninput="calc()"> <span style="font-size:0.75rem;color:var(--muted)">horas de impressão</span> <input type="number" id="pH" value="3" style="width:80px" oninput="calc()"></div>
+        <div class="calc-field"><label>Mão de obra (R$)</label><input type="number" id="pMdo" value="8" oninput="calc()"></div>
+        <div class="calc-field"><label>Outros custos (R$)</label><input type="number" id="pOut" value="2" oninput="calc()"></div>
+        <div class="calc-field"><label>Margem desejada (%)</label><input type="number" id="pMarg" value="40" oninput="calc()"></div>
+        <div class="calc-field"><label>Marketplace</label>
+          <select id="pMkt" onchange="calc()" style="background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.85rem;padding:0.55rem 0.85rem;outline:none">
+            <option value="20">Shopee (~20%)</option>
+            <option value="16">Mercado Livre (~16%)</option>
+            <option value="15">Amazon (~15%)</option>
+          </select>
+        </div>
+        <div class="calc-result">
+          <div class="calc-row"><span>Custo filamento</span><span id="rFil">—</span></div>
+          <div class="calc-row"><span>Custo energia</span><span id="rEn">—</span></div>
+          <div class="calc-row"><span>Mão de obra</span><span id="rMdo">—</span></div>
+          <div class="calc-row"><span>Outros</span><span id="rOut">—</span></div>
+          <div class="calc-row"><span>Comissão marketplace</span><span id="rCom">—</span></div>
+          <div class="calc-row total"><span>Preço de venda sugerido</span><span id="rTotal">—</span></div>
+          <div class="calc-row lucro"><span>Lucro líquido</span><span id="rLucro">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REPLICAR -->
+    <div class="tab-panel" id="panel-replicar">
+      <div class="exp-grid">
+        <div class="exp-card">
+          <div style="font-size:1.5rem">🟠</div>
+          <div class="exp-name">Shopee</div>
+          <div class="exp-status">Operação ativa</div>
+          <span class="badge badge-ok">100%</span>
+        </div>
+        <div class="exp-card">
+          <div style="font-size:1.5rem">🟡</div>
+          <div class="exp-name">Mercado Livre</div>
+          <div class="exp-status">Em andamento</div>
+          <span class="badge badge-warn">60%</span>
+        </div>
+        <div class="exp-card">
+          <div style="font-size:1.5rem">🔴</div>
+          <div class="exp-name">Amazon</div>
+          <div class="exp-status">Não iniciado</div>
+          <span class="badge badge-danger">0%</span>
+        </div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="panel">
+          <div class="panel-title">Mercado Livre — checklist</div>
+          <div class="check-item"><input type="checkbox" checked onchange="markDone(this)"><span class="check-done">Criar conta vendedor Mercado Livre</span></div>
+          <div class="check-item"><input type="checkbox" checked onchange="markDone(this)"><span class="check-done">Configurar Mercado Pago</span></div>
+          <div class="check-item"><input type="checkbox" checked onchange="markDone(this)"><span class="check-done">Cadastrar os 5 produtos mais vendidos</span></div>
+          <div class="check-item"><input type="checkbox" onchange="markDone(this)"><span>Otimizar títulos e descrições para ML</span></div>
+          <div class="check-item"><input type="checkbox" onchange="markDone(this)"><span>Definir política de frete (Full ou Normal)</span></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Amazon — checklist</div>
+          <div class="check-item"><input type="checkbox" onchange="markDone(this)"><span>Criar conta Amazon Seller Central</span></div>
+          <div class="check-item"><input type="checkbox" onchange="markDone(this)"><span>Definir plano Individual ou Profissional</span></div>
+          <div class="check-item"><input type="checkbox" onchange="markDone(this)"><span>Documentação fiscal (CNPJ)</span></div>
+          <div class="check-item"><input type="checkbox" onchange="markDone(this)"><span>Cadastrar catálogo com ASIN/EAN</span></div>
+          <div class="check-item"><input type="checkbox" onchange="markDone(this)"><span>Configurar logística (FBA ou FBM)</span></div>
+          <div class="check-item"><input type="checkbox" onchange="markDone(this)"><span>Primeira venda + coleta de avaliações</span></div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:2px">
+        <div class="panel-title">Diferenças operacionais por canal</div>
+        <table class="diff-table">
+          <thead><tr><th>Aspecto</th><th>Shopee</th><th>Mercado Livre</th><th>Amazon</th></tr></thead>
+          <tbody>
+            <tr><td>Comissão</td><td>~20%</td><td>~16%</td><td>~15%</td></tr>
+            <tr><td>Frete</td><td>Shopee Envios</td><td>Mercado Envios</td><td>Correios / FBA</td></tr>
+            <tr><td>Repasse</td><td>D+15</td><td>D+7</td><td>D+14</td></tr>
+            <tr><td>Avaliação mínima</td><td>4.5★</td><td>Reputação verde</td><td>4.0★</td></tr>
+            <tr><td>Público foco</td><td>Preço baixo</td><td>Confiança + entrega</td><td>Prime / qualidade</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PRODUTOS -->
+    <div class="tab-panel" id="panel-produtos">
+      <div class="panel">
+        <div class="panel-title">Catálogo Fine Line 3D</div>
+        <table class="table">
+          <thead><tr><th>Produto</th><th>Preço venda</th><th>Custo</th><th>Margem</th><th>Canais ativos</th></tr></thead>
+          <tbody>
+            <tr><td style="font-weight:500">Suporte parede articulado</td><td>R$40</td><td>R$23</td><td><span class="badge badge-ok">43%</span></td><td><span class="badge mkt mkt-s" style="margin-right:3px">S</span><span class="badge mkt mkt-ml">ML</span></td></tr>
+            <tr><td style="font-weight:500">Case celular personalizado</td><td>R$40</td><td>R$24</td><td><span class="badge badge-ok">40%</span></td><td><span class="badge mkt mkt-s">S</span></td></tr>
+            <tr><td style="font-weight:500">Organizador de gaveta</td><td>R$40</td><td>R$28</td><td><span class="badge badge-warn">30%</span></td><td><span class="badge mkt mkt-ml">ML</span></td></tr>
+            <tr><td style="font-weight:500">Miniatura decorativa</td><td>R$40</td><td>R$22</td><td><span class="badge badge-ok">45%</span></td><td><span class="badge mkt mkt-s">S</span></td></tr>
+            <tr><td style="font-weight:500">Engrenagem reposição</td><td>R$50</td><td>R$24</td><td><span class="badge badge-ok">52%</span></td><td><span class="badge mkt mkt-a">AMZ</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /app -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+// ── SENHA ──
+// TROQUE A SENHA ABAIXO ANTES DE PUBLICAR
+var SENHA = 'fineline2026';
+
+function entrar(){
+  var v = document.getElementById('senhaInput').value;
+  if(v === SENHA){
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    setDate();
+    setTimeout(initCharts, 120);
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+    document.getElementById('senhaInput').value = '';
+    document.getElementById('senhaInput').focus();
+  }
+}
+document.getElementById('senhaInput').addEventListener('keydown', function(e){ if(e.key==='Enter') entrar(); });
+
+function sair(){
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('senhaInput').value = '';
+  document.getElementById('loginErr').style.display = 'none';
+}
+
+function setDate(){
+  var d = new Date();
+  document.getElementById('topDate').textContent = d.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short',year:'numeric'});
+}
+
+// ── TABS ──
+function showTab(t,btn){
+  document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.nav-tab').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('panel-'+t).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── FILA ──
+function filtrarFila(){
+  var v = document.getElementById('filterStatus').value;
+  document.querySelectorAll('.queue-item').forEach(function(el){
+    el.style.display = (v==='todos' || el.dataset.s===v) ? 'flex' : 'none';
+  });
+}
+function addPedido(){
+  var prod = document.getElementById('aProd').value;
+  var mkt  = document.getElementById('aMkt').value;
+  var qtd  = document.getElementById('aQtd').value;
+  var prz  = document.getElementById('aPrazo').value;
+  if(!prod) return;
+  var el = document.createElement('div');
+  el.className = 'queue-item'; el.dataset.s = 'fila';
+  el.innerHTML = '<div class="queue-icon" style="background:rgba(212,160,23,0.12)">⏳</div><div style="flex:1"><div class="queue-name">'+prod+(qtd?' × '+qtd:'')+'</div><div class="queue-meta">'+mkt+(prz?' · Prazo: '+prz:'')+'</div></div><span class="badge badge-warn">Na fila</span>';
+  document.getElementById('filaLista').appendChild(el);
+  document.getElementById('aProd').value = '';
+  document.getElementById('aQtd').value = '';
+}
+
+// ── CALC ──
+function calc(){
+  var filKg = parseFloat(document.getElementById('pFil').value)||0;
+  var gr    = parseFloat(document.getElementById('pGr').value)||0;
+  var enH   = parseFloat(document.getElementById('pEn').value)||0;
+  var h     = parseFloat(document.getElementById('pH').value)||0;
+  var mdo   = parseFloat(document.getElementById('pMdo').value)||0;
+  var out   = parseFloat(document.getElementById('pOut').value)||0;
+  var marg  = parseFloat(document.getElementById('pMarg').value)||0;
+  var com   = parseFloat(document.getElementById('pMkt').value)||0;
+  var cFil  = filKg*(gr/1000);
+  var cEn   = enH*h;
+  var base  = cFil+cEn+mdo+out;
+  var preSemCom = base/(1-(marg/100));
+  var preco = preSemCom/(1-(com/100));
+  var comVal = preco*(com/100);
+  var lucro  = preco-base-comVal;
+  document.getElementById('rFil').textContent  = 'R$'+cFil.toFixed(2);
+  document.getElementById('rEn').textContent   = 'R$'+cEn.toFixed(2);
+  document.getElementById('rMdo').textContent  = 'R$'+mdo.toFixed(2);
+  document.getElementById('rOut').textContent  = 'R$'+out.toFixed(2);
+  document.getElementById('rCom').textContent  = 'R$'+comVal.toFixed(2)+' ('+com+'%)';
+  document.getElementById('rTotal').textContent= 'R$'+preco.toFixed(2);
+  document.getElementById('rLucro').textContent= 'R$'+lucro.toFixed(2)+' ('+marg.toFixed(0)+'%)';
+}
+calc();
+
+// ── CHECKLIST ──
+function markDone(cb){
+  var span = cb.nextElementSibling;
+  if(cb.checked){ span.classList.add('check-done'); }
+  else { span.classList.remove('check-done'); }
+}
+
+// ── CHARTS ──
+function initCharts(){
+  new Chart(document.getElementById('mktChart'),{
+    type:'doughnut',
+    data:{labels:['Shopee','Mercado Livre','Amazon'],datasets:[{data:[68,22,10],backgroundColor:['#e8420a','#4caf7a','#d4a017'],borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}
+  });
+  new Chart(document.getElementById('recChart'),{
+    type:'bar',
+    data:{
+      labels:['25/02','04/03','11/03','18/03'],
+      datasets:[
+        {label:'Shopee',data:[1800,2100,1950,2200],backgroundColor:'#e8420a',borderRadius:2},
+        {label:'Meli',data:[500,620,590,720],backgroundColor:'#4caf7a',borderRadius:2},
+        {label:'Amazon',data:[200,280,210,330],backgroundColor:'#d4a017',borderRadius:2}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{stacked:true,grid:{display:false},ticks:{color:'rgba(245,243,238,0.3)',font:{size:10}}},
+        y:{stacked:true,grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'rgba(245,243,238,0.3)',font:{size:10},callback:function(v){return'R$'+v}}}
+      }
+    }
+  });
+}
+</script>
+</body>
+</html>

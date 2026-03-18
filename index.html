@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fine Line 3D — Impressão 3D Personalizada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #0d0d0d;
+  --white: #f5f3ee;
+  --accent: #e8420a;
+  --gray: #888;
+  --light: #f0ede6;
+  --card-bg: #161616;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+}
+a { text-decoration: none; color: inherit; }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; width: 100%; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.2rem 4rem;
+  background: rgba(13,13,13,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem; letter-spacing: 2px;
+}
+.nav-logo-lines { display: flex; align-items: flex-end; gap: 3px; }
+.nl { width: 3px; border-radius: 2px; background: var(--accent); }
+.nav-links { display: flex; gap: 2rem; font-size: 0.85rem; font-weight: 400; letter-spacing: 0.5px; }
+.nav-links a { color: rgba(245,243,238,0.6); transition: color .2s; }
+.nav-links a:hover { color: var(--white); }
+.nav-cta {
+  background: var(--accent); color: var(--white);
+  padding: 0.55rem 1.4rem; border-radius: 2px;
+  font-size: 0.82rem; font-weight: 500; letter-spacing: 0.5px;
+  transition: opacity .2s;
+}
+.nav-cta:hover { opacity: 0.85; }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex; align-items: center;
+  padding: 8rem 4rem 4rem;
+  position: relative; overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 80% at 70% 50%, rgba(232,66,10,0.08) 0%, transparent 60%),
+    repeating-linear-gradient(0deg, transparent, transparent 79px, rgba(255,255,255,0.025) 80px),
+    repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(255,255,255,0.025) 80px);
+}
+.hero-content { position: relative; max-width: 700px; }
+.hero-tag {
+  display: inline-block;
+  font-size: 0.72rem; font-weight: 500; letter-spacing: 3px;
+  color: var(--accent); text-transform: uppercase;
+  border: 1px solid rgba(232,66,10,0.4);
+  padding: 0.3rem 0.8rem; border-radius: 2px;
+  margin-bottom: 1.5rem;
+  animation: fadeUp 0.6s ease both;
+}
+.hero h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4rem, 10vw, 8rem);
+  line-height: 0.95; letter-spacing: 2px;
+  animation: fadeUp 0.6s 0.1s ease both;
+}
+.hero h1 span { color: var(--accent); }
+.hero-sub {
+  margin-top: 1.5rem; max-width: 480px;
+  font-size: 1rem; line-height: 1.7;
+  color: rgba(245,243,238,0.6);
+  animation: fadeUp 0.6s 0.2s ease both;
+}
+.hero-actions {
+  display: flex; gap: 1rem; margin-top: 2.5rem; flex-wrap: wrap;
+  animation: fadeUp 0.6s 0.3s ease both;
+}
+.btn-primary {
+  background: var(--accent); color: var(--white);
+  padding: 0.85rem 2rem; border-radius: 2px;
+  font-size: 0.9rem; font-weight: 500;
+  transition: opacity .2s; display: inline-block;
+}
+.btn-primary:hover { opacity: 0.85; }
+.btn-outline {
+  border: 1px solid rgba(245,243,238,0.25); color: var(--white);
+  padding: 0.85rem 2rem; border-radius: 2px;
+  font-size: 0.9rem; font-weight: 400;
+  transition: border-color .2s, background .2s; display: inline-block;
+}
+.btn-outline:hover { border-color: var(--white); background: rgba(255,255,255,0.04); }
+.hero-stats {
+  display: flex; gap: 3rem; margin-top: 4rem;
+  animation: fadeUp 0.6s 0.4s ease both;
+}
+.hero-stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.2rem; letter-spacing: 1px; color: var(--white);
+}
+.hero-stat-label { font-size: 0.78rem; color: rgba(245,243,238,0.45); margin-top: 2px; }
+
+/* SECTION COMMON */
+section { padding: 6rem 4rem; }
+.section-label {
+  font-size: 0.72rem; font-weight: 500; letter-spacing: 3px;
+  color: var(--accent); text-transform: uppercase; margin-bottom: 1rem;
+}
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  letter-spacing: 1px; line-height: 1;
+  margin-bottom: 1rem;
+}
+.section-sub { font-size: 0.95rem; color: rgba(245,243,238,0.5); max-width: 480px; line-height: 1.7; }
+
+/* COMO FUNCIONA */
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 2px; margin-top: 3.5rem; }
+.step {
+  background: var(--card-bg); padding: 2.5rem 2rem;
+  position: relative; overflow: hidden;
+  transition: background .25s;
+}
+.step:hover { background: #1d1d1d; }
+.step-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 5rem; color: rgba(232,66,10,0.12);
+  line-height: 1; margin-bottom: 1rem;
+}
+.step h3 { font-size: 1rem; font-weight: 500; margin-bottom: 0.6rem; }
+.step p { font-size: 0.85rem; color: rgba(245,243,238,0.5); line-height: 1.65; }
+
+/* CATÁLOGO */
+#catalogo { background: #0a0a0a; }
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px,1fr));
+  gap: 2px; margin-top: 3.5rem;
+}
+.product-card {
+  background: var(--card-bg); overflow: hidden;
+  transition: transform .25s;
+  cursor: default;
+}
+.product-card:hover { transform: translateY(-4px); }
+.product-img {
+  height: 220px;
+  background: #1e1e1e;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 4rem; position: relative; overflow: hidden;
+}
+.product-img::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.5));
+}
+.product-info { padding: 1.5rem; }
+.product-tag {
+  font-size: 0.65rem; font-weight: 500; letter-spacing: 2px;
+  color: var(--accent); text-transform: uppercase; margin-bottom: 0.5rem;
+}
+.product-name { font-size: 1rem; font-weight: 500; margin-bottom: 0.4rem; }
+.product-desc { font-size: 0.82rem; color: rgba(245,243,238,0.45); line-height: 1.6; margin-bottom: 1rem; }
+.product-price { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: var(--accent); }
+.product-price span { font-family: 'DM Sans', sans-serif; font-size: 0.75rem; color: var(--gray); font-weight: 300; }
+
+/* DEPOIMENTOS */
+.testimonials { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 2px; margin-top: 3.5rem; }
+.testimonial { background: var(--card-bg); padding: 2rem; }
+.testimonial-stars { color: var(--accent); font-size: 0.85rem; margin-bottom: 1rem; letter-spacing: 2px; }
+.testimonial-text { font-size: 0.9rem; line-height: 1.7; color: rgba(245,243,238,0.7); margin-bottom: 1.5rem; font-style: italic; }
+.testimonial-author { font-size: 0.8rem; font-weight: 500; }
+.testimonial-meta { font-size: 0.72rem; color: var(--gray); margin-top: 2px; }
+
+/* ORÇAMENTO */
+#orcamento { background: #080808; }
+.orcamento-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; }
+.orcamento-info { position: sticky; top: 7rem; }
+.orcamento-info h2 { font-family: 'Bebas Neue', sans-serif; font-size: 3.5rem; letter-spacing: 1px; line-height: 1; margin-bottom: 1.5rem; }
+.orcamento-info p { font-size: 0.9rem; color: rgba(245,243,238,0.5); line-height: 1.7; margin-bottom: 1rem; }
+.orcamento-bullets { list-style: none; margin-top: 1.5rem; }
+.orcamento-bullets li { font-size: 0.85rem; color: rgba(245,243,238,0.6); padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; gap: 0.75rem; }
+.orcamento-bullets li::before { content: ''; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; flex-shrink: 0; }
+form { display: flex; flex-direction: column; gap: 1rem; }
+.form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+.form-group label { font-size: 0.72rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(245,243,238,0.4); }
+.form-group input,
+.form-group select,
+.form-group textarea {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--white); font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem; font-weight: 300;
+  padding: 0.85rem 1rem; border-radius: 2px;
+  outline: none; transition: border-color .2s;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus { border-color: var(--accent); }
+.form-group textarea { resize: vertical; min-height: 120px; }
+.form-group select option { background: #1a1a1a; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-submit {
+  background: var(--accent); color: var(--white);
+  border: none; padding: 1rem; border-radius: 2px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem; font-weight: 500; letter-spacing: 0.5px;
+  cursor: pointer; transition: opacity .2s; margin-top: 0.5rem;
+}
+.form-submit:hover { opacity: 0.85; }
+.form-success {
+  display: none; background: rgba(232,66,10,0.1);
+  border: 1px solid rgba(232,66,10,0.3);
+  padding: 1.2rem; border-radius: 2px;
+  font-size: 0.85rem; color: rgba(245,243,238,0.8); line-height: 1.6;
+}
+
+/* FOOTER */
+footer {
+  background: #080808;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 3rem 4rem;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;
+}
+.footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 2px; }
+.footer-links { display: flex; gap: 2rem; font-size: 0.82rem; color: rgba(245,243,238,0.4); }
+.footer-links a:hover { color: var(--white); }
+.footer-copy { font-size: 0.75rem; color: rgba(245,243,238,0.25); }
+
+/* AREA INTERNA LINK */
+.staff-link {
+  position: fixed; bottom: 2rem; right: 2rem; z-index: 90;
+  background: rgba(20,20,20,0.95); border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(245,243,238,0.3); font-size: 0.7rem;
+  padding: 0.5rem 0.9rem; border-radius: 2px;
+  letter-spacing: 0.5px;
+  backdrop-filter: blur(8px);
+  transition: color .2s, border-color .2s;
+  font-family: 'DM Sans', sans-serif;
+}
+.staff-link:hover { color: var(--white); border-color: rgba(255,255,255,0.25); }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* RESPONSIVE */
+@media(max-width: 768px) {
+  nav { padding: 1rem 1.5rem; }
+  .nav-links { display: none; }
+  .hero { padding: 7rem 1.5rem 3rem; }
+  section { padding: 4rem 1.5rem; }
+  .hero-stats { gap: 2rem; flex-wrap: wrap; }
+  .orcamento-wrap { grid-template-columns: 1fr; gap: 3rem; }
+  .orcamento-info { position: static; }
+  footer { padding: 2rem 1.5rem; flex-direction: column; align-items: flex-start; }
+  .form-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-lines">
+      <div class="nl" style="height:22px"></div>
+      <div class="nl" style="height:14px;opacity:.4"></div>
+      <div class="nl" style="height:18px;opacity:.7"></div>
+    </div>
+    Fine Line 3D
+  </div>
+  <div class="nav-links">
+    <a href="#como-funciona">Como funciona</a>
+    <a href="#catalogo">Produtos</a>
+    <a href="#depoimentos">Avaliações</a>
+    <a href="#orcamento">Orçamento</a>
+  </div>
+  <a href="#orcamento" class="nav-cta">Pedir orçamento</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Impressão 3D sob demanda · São Paulo</div>
+    <h1>FINE<br>LINE <span>3D</span></h1>
+    <p class="hero-sub">Transformamos suas ideias em objetos reais. Produtos personalizados, peças técnicas e decoração impressos em 3D com qualidade e entrega rápida.</p>
+    <div class="hero-actions">
+      <a href="#orcamento" class="btn-primary">Solicitar orçamento</a>
+      <a href="#catalogo" class="btn-outline">Ver produtos</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-num">+500</div>
+        <div class="hero-stat-label">Pedidos entregues</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">4.9★</div>
+        <div class="hero-stat-label">Avaliação média</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">3</div>
+        <div class="hero-stat-label">Marketplaces ativos</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section id="como-funciona">
+  <div class="section-label">Processo</div>
+  <div class="section-title">COMO FUNCIONA</div>
+  <p class="section-sub">Do pedido à entrega em poucos dias. Simples, rápido e sem complicação.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <h3>Envie sua ideia</h3>
+      <p>Preencha o formulário com o que você precisa. Aceito arquivos STL, referências ou apenas uma descrição.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <h3>Receba o orçamento</h3>
+      <p>Em até 24h você recebe o preço, prazo e confirmação de viabilidade do projeto.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <h3>Produção</h3>
+      <p>Após aprovação, a impressão começa. Você acompanha o status do pedido em tempo real.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <h3>Entrega</h3>
+      <p>Enviamos para todo o Brasil via Shopee, Mercado Livre e Amazon com rastreamento completo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CATÁLOGO -->
+<section id="catalogo">
+  <div class="section-label">Produtos</div>
+  <div class="section-title">CATÁLOGO</div>
+  <p class="section-sub">Produtos mais vendidos. Tudo pode ser personalizado sob medida.</p>
+  <div class="product-grid">
+    <div class="product-card">
+      <div class="product-img">📱</div>
+      <div class="product-info">
+        <div class="product-tag">Mais vendido</div>
+        <div class="product-name">Case Personalizado</div>
+        <p class="product-desc">Cases para celular impressos em 3D com nome, logo ou arte personalizada.</p>
+        <div class="product-price">A partir de R$40 <span>/ unidade</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img">🔩</div>
+      <div class="product-info">
+        <div class="product-tag">Técnico</div>
+        <div class="product-name">Suporte Articulado</div>
+        <p class="product-desc">Suportes de parede e mesa para monitores, celulares e equipamentos.</p>
+        <div class="product-price">A partir de R$40 <span>/ unidade</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img">🗂️</div>
+      <div class="product-info">
+        <div class="product-tag">Organização</div>
+        <div class="product-name">Organizador de Gaveta</div>
+        <p class="product-desc">Divisórias e organizadores sob medida para qualquer gaveta ou espaço.</p>
+        <div class="product-price">A partir de R$40 <span>/ unidade</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img">🎭</div>
+      <div class="product-info">
+        <div class="product-tag">Decoração</div>
+        <div class="product-name">Miniaturas & Décor</div>
+        <p class="product-desc">Estatuetas, miniaturas personalizadas e peças decorativas para casa.</p>
+        <div class="product-price">A partir de R$40 <span>/ unidade</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img">⚙️</div>
+      <div class="product-info">
+        <div class="product-tag">Reposição</div>
+        <div class="product-name">Peças Técnicas</div>
+        <p class="product-desc">Engrenagens, buchas e peças de reposição para equipamentos e máquinas.</p>
+        <div class="product-price">A partir de R$50 <span>/ unidade</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img">✨</div>
+      <div class="product-info">
+        <div class="product-tag">Sob encomenda</div>
+        <div class="product-name">Projeto Personalizado</div>
+        <p class="product-desc">Tem um projeto específico? Trazemos sua ideia do digital para o real.</p>
+        <div class="product-price">Consulte <span>/ sob orçamento</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section id="depoimentos">
+  <div class="section-label">Avaliações</div>
+  <div class="section-title">O QUE DIZEM</div>
+  <p class="section-sub">Avaliações reais de clientes da Shopee e Mercado Livre.</p>
+  <div class="testimonials">
+    <div class="testimonial">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">"Produto chegou perfeito, exatamente como na foto. Qualidade impressionante para o preço. Já fiz segundo pedido!"</p>
+      <div class="testimonial-author">Mariana S.</div>
+      <div class="testimonial-meta">Shopee · Case personalizado</div>
+    </div>
+    <div class="testimonial">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">"Precisava de uma peça de reposição que não achava em nenhum lugar. A Fine Line 3D resolveu em 3 dias. Salvou minha máquina!"</p>
+      <div class="testimonial-author">Carlos M.</div>
+      <div class="testimonial-meta">Mercado Livre · Peça técnica</div>
+    </div>
+    <div class="testimonial">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">"Encomendei miniaturas personalizadas para presente. Ficaram incríveis, melhor do que esperava. Entrega super rápida."</p>
+      <div class="testimonial-author">Juliana R.</div>
+      <div class="testimonial-meta">Shopee · Miniatura personalizada</div>
+    </div>
+    <div class="testimonial">
+      <div class="testimonial-stars">★★★★☆</div>
+      <p class="testimonial-text">"Suporte de monitor super resistente e bem acabado. Instalei sem dificuldade. Recomendo muito, vendedor muito atencioso."</p>
+      <div class="testimonial-author">Pedro A.</div>
+      <div class="testimonial-meta">Mercado Livre · Suporte articulado</div>
+    </div>
+  </div>
+</section>
+
+<!-- ORÇAMENTO -->
+<section id="orcamento">
+  <div class="orcamento-wrap">
+    <div class="orcamento-info">
+      <div class="section-label">Contato</div>
+      <h2>SOLICITE SEU ORÇAMENTO</h2>
+      <p>Preencha o formulário e respondemos em até 24 horas com o valor e prazo do seu pedido.</p>
+      <ul class="orcamento-bullets">
+        <li>Aceito arquivos STL, OBJ ou apenas descrição</li>
+        <li>Entrega para todo o Brasil</li>
+        <li>Personalização completa de cor e material</li>
+        <li>Pedidos a partir de 1 unidade</li>
+        <li>Nota fiscal em todos os pedidos</li>
+      </ul>
+    </div>
+    <div>
+      <form id="orcamentoForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nome</label>
+            <input type="text" placeholder="Seu nome" required>
+          </div>
+          <div class="form-group">
+            <label>WhatsApp</label>
+            <input type="tel" placeholder="(11) 99999-9999">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>E-mail</label>
+          <input type="email" placeholder="seu@email.com" required>
+        </div>
+        <div class="form-group">
+          <label>Produto / Categoria</label>
+          <select>
+            <option value="" disabled selected>Selecione</option>
+            <option>Case personalizado</option>
+            <option>Suporte articulado</option>
+            <option>Organizador</option>
+            <option>Miniatura / decoração</option>
+            <option>Peça técnica / reposição</option>
+            <option>Projeto personalizado</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Quantidade</label>
+            <input type="number" placeholder="Ex: 5" min="1">
+          </div>
+          <div class="form-group">
+            <label>Prazo desejado</label>
+            <input type="text" placeholder="Ex: 7 dias">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Descrição do pedido</label>
+          <textarea placeholder="Descreva o que precisa. Dimensões, cor, material, referências..."></textarea>
+        </div>
+        <button type="submit" class="form-submit">Enviar solicitação</button>
+        <div class="form-success" id="formSuccess">
+          ✓ Solicitação recebida! Entraremos em contato em até 24 horas com o orçamento completo. Obrigado por escolher a Fine Line 3D.
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Fine Line 3D</div>
+  <div class="footer-links">
+    <a href="#como-funciona">Como funciona</a>
+    <a href="#catalogo">Produtos</a>
+    <a href="#orcamento">Orçamento</a>
+    <a href="https://shopee.com.br" target="_blank">Shopee</a>
+    <a href="https://mercadolivre.com.br" target="_blank">Mercado Livre</a>
+  </div>
+  <div class="footer-copy">© 2026 Fine Line 3D · São Paulo</div>
+</footer>
+
+<!-- LINK INTERNO (só visível para quem sabe) -->
+<a href="interno.html" class="staff-link">acesso interno</a>
+
+<script>
+document.getElementById('orcamentoForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  document.querySelector('.form-submit').style.display = 'none';
+  document.getElementById('formSuccess').style.display = 'block';
+});
+</script>
+</body>
+</html>

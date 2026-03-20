@@ -157,10 +157,11 @@ section { padding: 6rem 4rem; }
 }
 .product-card {
   background: var(--card-bg); overflow: hidden;
-  transition: transform .25s;
-  cursor: default;
+  transition: transform .25s, border-color .25s;
+  cursor: pointer;
+  border: 1px solid transparent;
 }
-.product-card:hover { transform: translateY(-4px); }
+.product-card:hover { transform: translateY(-4px); border-color: rgba(128,255,191,0.25); }
 .product-img {
   height: 220px;
   background: #1e1e1e;
@@ -360,62 +361,173 @@ footer {
   <div class="section-label">Produtos</div>
   <div class="section-title">CATÁLOGO</div>
   <p class="section-sub">Produtos mais vendidos. Tudo pode ser personalizado sob medida.</p>
+  <!-- MODAL PRODUTO -->
+  <div id="prodModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:999;align-items:center;justify-content:center;padding:1rem" onclick="if(event.target===this)fecharProdModal()">
+    <div style="background:#111;border:1px solid rgba(128,255,191,0.2);width:100%;max-width:520px;padding:2.5rem;position:relative;animation:fadeUp .3s ease">
+      <button onclick="fecharProdModal()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:rgba(245,243,238,0.4);font-size:1.2rem;cursor:pointer;line-height:1">✕</button>
+      <div id="pm-icon" style="font-size:3rem;margin-bottom:1rem"></div>
+      <div id="pm-tag" style="font-size:0.68rem;font-weight:500;letter-spacing:3px;color:#80ffbf;text-transform:uppercase;border:1px solid rgba(128,255,191,0.3);padding:0.25rem 0.7rem;display:inline-block;margin-bottom:0.75rem"></div>
+      <h2 id="pm-nome" style="font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:1px;margin-bottom:0.5rem"></h2>
+      <p id="pm-desc" style="font-size:0.9rem;color:rgba(245,243,238,0.55);line-height:1.7;margin-bottom:0.5rem"></p>
+      <div id="pm-preco" style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:#80ffbf;margin-bottom:1.75rem"></div>
+      <div style="font-size:0.68rem;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:rgba(245,243,238,0.3);margin-bottom:0.75rem">Comprar em</div>
+      <div id="pm-links" style="display:flex;flex-direction:column;gap:0.6rem"></div>
+      <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.07)">
+        <a href="#orcamento" onclick="fecharProdModal()" style="display:block;text-align:center;background:rgba(128,255,191,0.1);border:1px solid rgba(128,255,191,0.3);color:#80ffbf;padding:0.85rem;font-size:0.85rem;font-weight:500;letter-spacing:0.5px;transition:background .2s" onmouseover="this.style.background='rgba(128,255,191,0.2)'" onmouseout="this.style.background='rgba(128,255,191,0.1)'">Solicitar orçamento personalizado</a>
+      </div>
+    </div>
+  </div>
+
   <div class="product-grid">
-    <div class="product-card">
-      <div class="product-img">📱</div>
+    <div class="product-card" onclick="abrirProdModal(0)" style="cursor:pointer">
+      <div class="product-img">🌿</div>
       <div class="product-info">
         <div class="product-tag">Mais vendido</div>
-        <div class="product-name">Case Personalizado</div>
-        <p class="product-desc">Cases para celular impressos em 3D com nome, logo ou arte personalizada.</p>
-        <div class="product-price">A partir de R$40 <span>/ unidade</span></div>
+        <div class="product-name">Vasos 3D</div>
+        <p class="product-desc">Vasos geométricos, orgânicos e personalizados para plantas e decoração de ambientes.</p>
+        <div class="product-price">A partir de R$35 <span>/ unidade</span></div>
+        <div style="margin-top:0.75rem;font-size:0.75rem;color:rgba(128,255,191,0.7);letter-spacing:0.5px">Ver onde comprar →</div>
       </div>
     </div>
-    <div class="product-card">
-      <div class="product-img">🔩</div>
+    <div class="product-card" onclick="abrirProdModal(1)" style="cursor:pointer">
+      <div class="product-img">🎨</div>
       <div class="product-info">
-        <div class="product-tag">Técnico</div>
-        <div class="product-name">Suporte Articulado</div>
-        <p class="product-desc">Suportes de parede e mesa para monitores, celulares e equipamentos.</p>
+        <div class="product-tag">Decoração</div>
+        <div class="product-name">Peças Decorativas</div>
+        <p class="product-desc">Esculturas, painéis, objetos de mesa e arte 3D para deixar seu espaço único.</p>
         <div class="product-price">A partir de R$40 <span>/ unidade</span></div>
+        <div style="margin-top:0.75rem;font-size:0.75rem;color:rgba(128,255,191,0.7);letter-spacing:0.5px">Ver onde comprar →</div>
       </div>
     </div>
-    <div class="product-card">
+    <div class="product-card" onclick="abrirProdModal(2)" style="cursor:pointer">
+      <div class="product-img">💡</div>
+      <div class="product-info">
+        <div class="product-tag">Iluminação</div>
+        <div class="product-name">Luminárias 3D</div>
+        <p class="product-desc">Abajures, pendentes e luminárias com designs exclusivos que criam jogos de luz incríveis.</p>
+        <div class="product-price">A partir de R$60 <span>/ unidade</span></div>
+        <div style="margin-top:0.75rem;font-size:0.75rem;color:rgba(128,255,191,0.7);letter-spacing:0.5px">Ver onde comprar →</div>
+      </div>
+    </div>
+    <div class="product-card" onclick="abrirProdModal(3)" style="cursor:pointer">
+      <div class="product-img">🔧</div>
+      <div class="product-info">
+        <div class="product-tag">Suportes</div>
+        <div class="product-name">Suportes Personalizados</div>
+        <p class="product-desc">Suportes de parede, mesa e teto para celular, monitor, controle, fone e muito mais.</p>
+        <div class="product-price">A partir de R$40 <span>/ unidade</span></div>
+        <div style="margin-top:0.75rem;font-size:0.75rem;color:rgba(128,255,191,0.7);letter-spacing:0.5px">Ver onde comprar →</div>
+      </div>
+    </div>
+    <div class="product-card" onclick="abrirProdModal(4)" style="cursor:pointer">
       <div class="product-img">🗂️</div>
       <div class="product-info">
         <div class="product-tag">Organização</div>
-        <div class="product-name">Organizador de Gaveta</div>
-        <p class="product-desc">Divisórias e organizadores sob medida para qualquer gaveta ou espaço.</p>
-        <div class="product-price">A partir de R$40 <span>/ unidade</span></div>
+        <div class="product-name">Organizadores</div>
+        <p class="product-desc">Organizadores de gaveta, mesa, cabos, maquiagem e escritório feitos sob medida.</p>
+        <div class="product-price">A partir de R$35 <span>/ unidade</span></div>
+        <div style="margin-top:0.75rem;font-size:0.75rem;color:rgba(128,255,191,0.7);letter-spacing:0.5px">Ver onde comprar →</div>
       </div>
     </div>
-    <div class="product-card">
-      <div class="product-img">🎭</div>
-      <div class="product-info">
-        <div class="product-tag">Decoração</div>
-        <div class="product-name">Miniaturas & Décor</div>
-        <p class="product-desc">Estatuetas, miniaturas personalizadas e peças decorativas para casa.</p>
-        <div class="product-price">A partir de R$40 <span>/ unidade</span></div>
-      </div>
-    </div>
-    <div class="product-card">
-      <div class="product-img">⚙️</div>
-      <div class="product-info">
-        <div class="product-tag">Reposição</div>
-        <div class="product-name">Peças Técnicas</div>
-        <p class="product-desc">Engrenagens, buchas e peças de reposição para equipamentos e máquinas.</p>
-        <div class="product-price">A partir de R$50 <span>/ unidade</span></div>
-      </div>
-    </div>
-    <div class="product-card">
+    <div class="product-card" onclick="abrirProdModal(5)" style="cursor:pointer">
       <div class="product-img">✨</div>
       <div class="product-info">
         <div class="product-tag">Sob encomenda</div>
         <div class="product-name">Projeto Personalizado</div>
-        <p class="product-desc">Tem um projeto específico? Trazemos sua ideia do digital para o real.</p>
+        <p class="product-desc">Tem uma ideia? Desenvolvemos qualquer peça exclusiva do zero para você.</p>
         <div class="product-price">Consulte <span>/ sob orçamento</span></div>
+        <div style="margin-top:0.75rem;font-size:0.75rem;color:rgba(128,255,191,0.7);letter-spacing:0.5px">Solicitar orçamento →</div>
       </div>
     </div>
   </div>
+
+  <script>
+  var PRODUTOS_MODAL = [
+    {
+      icon:"🌿", tag:"Mais vendido", nome:"Vasos 3D",
+      desc:"Vasos geométricos, orgânicos e personalizados para plantas e decoração de ambientes. Disponíveis em vários tamanhos e cores.",
+      preco:"A partir de R$35", 
+      links:[
+        {label:"Comprar na Shopee", url:"https://shopee.com.br", cor:"#e8431a"},
+        {label:"Comprar no Mercado Livre", url:"https://mercadolivre.com.br", cor:"#ffe600", textDark:true},
+        {label:"Comprar na Amazon", url:"https://amazon.com.br", cor:"#ff9900", textDark:true}
+      ]
+    },
+    {
+      icon:"🎨", tag:"Decoração", nome:"Peças Decorativas",
+      desc:"Esculturas, painéis, objetos de mesa e arte 3D exclusivos para deixar sua casa ou escritório com um visual único.",
+      preco:"A partir de R$40",
+      links:[
+        {label:"Comprar na Shopee", url:"https://shopee.com.br", cor:"#e8431a"},
+        {label:"Comprar no Mercado Livre", url:"https://mercadolivre.com.br", cor:"#ffe600", textDark:true}
+      ]
+    },
+    {
+      icon:"💡", tag:"Iluminação", nome:"Luminárias 3D",
+      desc:"Abajures, pendentes e luminárias com designs exclusivos que criam jogos de luz incríveis no seu ambiente.",
+      preco:"A partir de R$60",
+      links:[
+        {label:"Comprar na Shopee", url:"https://shopee.com.br", cor:"#e8431a"},
+        {label:"Comprar no Mercado Livre", url:"https://mercadolivre.com.br", cor:"#ffe600", textDark:true},
+        {label:"Comprar na Amazon", url:"https://amazon.com.br", cor:"#ff9900", textDark:true}
+      ]
+    },
+    {
+      icon:"🔧", tag:"Suportes", nome:"Suportes Personalizados",
+      desc:"Suportes de parede, mesa e teto para celular, monitor, controle, fone e muito mais. Feitos sob medida.",
+      preco:"A partir de R$40",
+      links:[
+        {label:"Comprar na Shopee", url:"https://shopee.com.br", cor:"#e8431a"},
+        {label:"Comprar no Mercado Livre", url:"https://mercadolivre.com.br", cor:"#ffe600", textDark:true}
+      ]
+    },
+    {
+      icon:"🗂️", tag:"Organização", nome:"Organizadores",
+      desc:"Organizadores de gaveta, mesa, cabos, maquiagem e escritório feitos exatamente do tamanho que você precisa.",
+      preco:"A partir de R$35",
+      links:[
+        {label:"Comprar na Shopee", url:"https://shopee.com.br", cor:"#e8431a"},
+        {label:"Comprar no Mercado Livre", url:"https://mercadolivre.com.br", cor:"#ffe600", textDark:true},
+        {label:"Comprar na Amazon", url:"https://amazon.com.br", cor:"#ff9900", textDark:true}
+      ]
+    },
+    {
+      icon:"✨", tag:"Sob encomenda", nome:"Projeto Personalizado",
+      desc:"Tem uma ideia? Desenvolvemos qualquer peça exclusiva do zero. Entre em contato para um orçamento personalizado.",
+      preco:"Consulte — sob orçamento",
+      links:[]
+    }
+  ];
+
+  function abrirProdModal(idx){
+    var p = PRODUTOS_MODAL[idx];
+    document.getElementById("pm-icon").textContent  = p.icon;
+    document.getElementById("pm-tag").textContent   = p.tag;
+    document.getElementById("pm-nome").textContent  = p.nome;
+    document.getElementById("pm-desc").textContent  = p.desc;
+    document.getElementById("pm-preco").textContent = p.preco;
+    var linksEl = document.getElementById("pm-links");
+    if(p.links.length){
+      linksEl.innerHTML = p.links.map(function(l){
+        var txtColor = l.textDark ? "#0d0d0d" : "#f5f3ee";
+        return "<a href='"+l.url+"' target='_blank' style='display:flex;align-items:center;justify-content:space-between;padding:0.9rem 1.1rem;background:"+l.cor+";color:"+txtColor+";font-size:0.88rem;font-weight:500;text-decoration:none;transition:opacity .2s' onmouseover='this.style.opacity=.85' onmouseout='this.style.opacity=1'>"+
+          "<span>"+l.label+"</span><span style='font-size:0.8rem;opacity:.7'>Acessar →</span>"+
+        "</a>";
+      }).join("");
+    } else {
+      linksEl.innerHTML = "<p style='font-size:0.85rem;color:rgba(245,243,238,0.4);text-align:center;padding:0.5rem'>Entre em contato pelo formulário abaixo.</p>";
+    }
+    document.getElementById("prodModal").style.display = "flex";
+    document.body.style.overflow = "hidden";
+  }
+
+  function fecharProdModal(){
+    document.getElementById("prodModal").style.display = "none";
+    document.body.style.overflow = "";
+  }
+
+  document.addEventListener("keydown", function(e){ if(e.key==="Escape") fecharProdModal(); });
+  </script>
 </section>
 
 <!-- DEPOIMENTOS -->

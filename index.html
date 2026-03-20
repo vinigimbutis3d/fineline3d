@@ -48,13 +48,7 @@ a{text-decoration:none;color:inherit}
 .hero-stat-label{font-size:0.75rem;color:rgba(245,243,238,0.4);margin-top:2px}
 
 /* HERO RIGHT VISUAL */
-.hero-visual-box{border:1px solid rgba(128,255,191,0.15);background:rgba(128,255,191,0.03);padding:2.5rem 2rem;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;height:100%;min-height:340px}
-.hero-visual-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(128,255,191,0.5),transparent)}
-.hero-visual-box::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(128,255,191,0.3),transparent)}
-.hero-visual-label{font-family:"Bebas Neue",sans-serif;font-size:1.4rem;letter-spacing:3px;color:rgba(245,243,238,0.6);margin-top:1rem}
-.hero-visual-label span{color:#80ffbf}
-.hero-visual-sub{font-size:0.7rem;color:rgba(245,243,238,0.3);letter-spacing:2px;text-transform:uppercase;margin-top:0.25rem}
-.hvb{font-size:0.65rem;font-weight:500;letter-spacing:1.5px;color:rgba(128,255,191,0.7);border:1px solid rgba(128,255,191,0.2);padding:0.2rem 0.65rem}
+
 
 /* SECTION */
 .section-label{font-size:0.7rem;font-weight:500;letter-spacing:3px;color:var(--accent);text-transform:uppercase;margin-bottom:0.75rem}
@@ -169,19 +163,7 @@ footer{background:#080808;border-top:1px solid rgba(255,255,255,0.06);padding:2.
           <div><div class="hero-stat-num">3</div><div class="hero-stat-label">Marketplaces ativos</div></div>
         </div>
       </div>
-      <div class="col-lg-6 d-none d-lg-flex fade-up d2">
-        <div class="hero-visual-box w-100">
-          <canvas id="heroObject" width="180" height="180"></canvas>
-          <div class="hero-visual-label">Fine Line <span>3D</span></div>
-          <div class="hero-visual-sub">Impressão de alta precisão</div>
-          <div class="d-flex gap-2 mt-3 flex-wrap justify-content-center">
-            <div class="hvb">PLA</div>
-            <div class="hvb">PETG</div>
-            <div class="hvb">ABS</div>
-            <div class="hvb">TPU</div>
-          </div>
-        </div>
-      </div>
+
     </div>
   </div>
 </section>
@@ -362,27 +344,7 @@ document.getElementById("orcForm").addEventListener("submit",function(e){
 
 
 
-// ROTATING WIREFRAME CUBE
-(function(){
-  var c=document.getElementById("heroObject");
-  if(!c)return;
-  var ctx=c.getContext("2d"),ax=0,ay=0;
-  var V=[[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]];
-  var E=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
-  function rX(v,a){return[v[0],v[1]*Math.cos(a)-v[2]*Math.sin(a),v[1]*Math.sin(a)+v[2]*Math.cos(a)];}
-  function rY(v,a){return[v[0]*Math.cos(a)+v[2]*Math.sin(a),v[1],-v[0]*Math.sin(a)+v[2]*Math.cos(a)];}
-  function proj(v){var z=v[2]+3;return[90+v[0]*60/z*2,90+v[1]*60/z*2];}
-  function draw(){
-    ctx.clearRect(0,0,180,180);
-    var pts=V.map(function(v){return proj(rY(rX(v,ax),ay));});
-    ctx.strokeStyle="rgba(128,255,191,0.7)";ctx.lineWidth=1.2;
-    E.forEach(function(e){ctx.beginPath();ctx.moveTo(pts[e[0]][0],pts[e[0]][1]);ctx.lineTo(pts[e[1]][0],pts[e[1]][1]);ctx.stroke();});
-    ctx.fillStyle="rgba(128,255,191,0.9)";
-    pts.forEach(function(p){ctx.beginPath();ctx.arc(p[0],p[1],2,0,Math.PI*2);ctx.fill();});
-    ax+=0.006;ay+=0.009;requestAnimationFrame(draw);
-  }
-  draw();
-})();
+
 </script>
 </body>
 </html>

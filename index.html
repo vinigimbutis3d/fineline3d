@@ -260,19 +260,26 @@ footer{background:#080808;border-top:1px solid rgba(255,255,255,0.06);padding:2.
         </ul>
       </div>
       <div class="col-lg-7">
-        <form id="orcForm">
+        <form id="orcForm" action="https://api.web3forms.com/submit" method="POST">
+          <input type="hidden" name="access_key" value="db914a09-3a62-46ca-926f-9b5b61ce22c7">
+          <input type="hidden" name="subject" value="Novo orçamento — Fine Line 3D">
+          <input type="hidden" name="from_name" value="Site Fine Line 3D">
+          <input type="checkbox" name="botcheck" style="display:none">
           <div class="row g-3">
-            <div class="col-sm-6"><label class="form-label">Nome</label><input type="text" class="form-control" placeholder="Seu nome" required></div>
-            <div class="col-sm-6"><label class="form-label">WhatsApp</label><input type="tel" class="form-control" placeholder="(11) 99999-9999"></div>
-            <div class="col-12"><label class="form-label">E-mail</label><input type="email" class="form-control" placeholder="seu@email.com" required></div>
+            <div class="col-sm-6"><label class="form-label">Nome</label><input type="text" name="nome" class="form-control" placeholder="Seu nome" required></div>
+            <div class="col-sm-6"><label class="form-label">WhatsApp</label><input type="tel" name="whatsapp" class="form-control" placeholder="(11) 99999-9999"></div>
+            <div class="col-12"><label class="form-label">E-mail</label><input type="email" name="email" class="form-control" placeholder="seu@email.com" required></div>
             <div class="col-sm-6"><label class="form-label">Produto / Categoria</label>
-              <select class="form-select"><option value="" disabled selected>Selecione</option><option>Vaso 3D</option><option>Peça decorativa</option><option>Luminária</option><option>Suporte personalizado</option><option>Organizador</option><option>Projeto personalizado</option></select>
+              <select name="produto" class="form-select"><option value="" disabled selected>Selecione</option><option>Vaso 3D</option><option>Peça decorativa</option><option>Luminária</option><option>Suporte personalizado</option><option>Organizador</option><option>Projeto personalizado</option></select>
             </div>
-            <div class="col-sm-3"><label class="form-label">Quantidade</label><input type="number" class="form-control" placeholder="Ex: 5" min="1"></div>
-            <div class="col-sm-3"><label class="form-label">Prazo desejado</label><input type="text" class="form-control" placeholder="Ex: 7 dias"></div>
-            <div class="col-12"><label class="form-label">Descrição do pedido</label><textarea class="form-control" placeholder="Descreva o que precisa. Dimensões, cor, material, referências..."></textarea></div>
-            <div class="col-12"><button type="submit" class="btn btn-accent w-100 py-3">Enviar solicitação</button></div>
-            <div class="col-12"><div id="formOk" style="display:none;background:rgba(128,255,191,0.08);border:1px solid rgba(128,255,191,0.25);padding:1rem;border-radius:2px;font-size:0.85rem;color:rgba(245,243,238,0.8)">✓ Solicitação recebida! Entraremos em contato em até 24 horas. Obrigado por escolher a Fine Line 3D.</div></div>
+            <div class="col-sm-3"><label class="form-label">Quantidade</label><input type="number" name="quantidade" class="form-control" placeholder="Ex: 5" min="1"></div>
+            <div class="col-sm-3"><label class="form-label">Prazo desejado</label><input type="text" name="prazo" class="form-control" placeholder="Ex: 7 dias"></div>
+            <div class="col-12"><label class="form-label">Descrição do pedido</label><textarea name="descricao" class="form-control" placeholder="Descreva o que precisa. Dimensões, cor, material, referências..."></textarea></div>
+            <div class="col-12"><button type="submit" class="btn btn-accent w-100 py-3" id="btnEnviar">Enviar solicitação</button></div>
+            <div class="col-12">
+              <div id="formOk" style="display:none;background:rgba(128,255,191,0.08);border:1px solid rgba(128,255,191,0.25);padding:1rem;border-radius:2px;font-size:0.85rem;color:rgba(245,243,238,0.8)">✓ Solicitação recebida! Entraremos em contato em até 24 horas. Obrigado por escolher a Fine Line 3D.</div>
+              <div id="formErr" style="display:none;background:rgba(220,50,50,0.08);border:1px solid rgba(220,50,50,0.25);padding:1rem;border-radius:2px;font-size:0.85rem;color:#ff6b6b">Erro ao enviar. Tente novamente ou entre em contato pelo WhatsApp.</div>
+            </div>
           </div>
         </form>
       </div>
@@ -337,10 +344,33 @@ function abrirModal(i){
   new bootstrap.Modal(document.getElementById("prodModal")).show();
 }
 
-document.getElementById("orcForm").addEventListener("submit",function(e){
+document.getElementById("orcForm").addEventListener("submit", async function(e){
   e.preventDefault();
-  this.querySelector("button[type=submit]").style.display="none";
-  document.getElementById("formOk").style.display="block";
+  var btn = document.getElementById("btnEnviar");
+  btn.disabled = true;
+  btn.textContent = "Enviando...";
+  document.getElementById("formOk").style.display = "none";
+  document.getElementById("formErr").style.display = "none";
+  try {
+    var res = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      body: new FormData(this)
+    });
+    var data = await res.json();
+    if(data.success){
+      document.getElementById("formOk").style.display = "block";
+      this.reset();
+      btn.textContent = "Enviado!";
+    } else {
+      document.getElementById("formErr").style.display = "block";
+      btn.disabled = false;
+      btn.textContent = "Enviar solicitação";
+    }
+  } catch(err){
+    document.getElementById("formErr").style.display = "block";
+    btn.disabled = false;
+    btn.textContent = "Enviar solicitação";
+  }
 });
 
 
